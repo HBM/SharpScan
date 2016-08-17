@@ -1,6 +1,6 @@
 ﻿// <copyright file="LruCache.cs" company="Hottinger Baldwin Messtechnik GmbH">
 //
-// CS Scan, a library for scanning and configuring HBM devices.
+// SharpScan, a library for scanning and configuring HBM devices.
 //
 // The MIT License (MIT)
 //
