@@ -28,24 +28,19 @@
 //
 // </copyright>
 
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Net.NetworkInformation;
-
 namespace Hbm.Devices.Scan
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Net.NetworkInformation;
+
     public class ScanInterfaces
     {
         private readonly IList<NetworkInterface> interfaces;
 
-        public IList<NetworkInterface> NetworkInterfaces
-        {
-            get { return new ReadOnlyCollection<NetworkInterface>(interfaces); }
-        }
-
         public ScanInterfaces()
         {
-            interfaces = new List<NetworkInterface>();
+            this.interfaces = new List<NetworkInterface>();
             NetworkInterface[] ifaces = NetworkInterface.GetAllNetworkInterfaces();
             foreach (NetworkInterface ni in ifaces)
             {
@@ -53,9 +48,14 @@ namespace Hbm.Devices.Scan
                     ni.NetworkInterfaceType != NetworkInterfaceType.Loopback &&
                     (ni.OperationalStatus == OperationalStatus.Up || ni.OperationalStatus == OperationalStatus.Unknown))
                 {
-                    interfaces.Add(ni);
+                    this.interfaces.Add(ni);
                 }
             }
+        }
+
+        public IList<NetworkInterface> NetworkInterfaces
+        {
+            get { return new ReadOnlyCollection<NetworkInterface>(this.interfaces); }
         }
     }
 }

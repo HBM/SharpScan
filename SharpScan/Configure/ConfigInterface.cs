@@ -1,4 +1,4 @@
-﻿// <copyright file="DefaultGateway.cs" company="Hottinger Baldwin Messtechnik GmbH">
+﻿// <copyright file="ConfigInterface.cs" company="Hottinger Baldwin Messtechnik GmbH">
 //
 // SharpScan, a library for scanning and configuring HBM devices.
 //
@@ -28,35 +28,39 @@
 //
 // </copyright>
 
-namespace Hbm.Devices.Scan.Announcing
+namespace Hbm.Devices.Scan.Configure
 {
-    using System.Runtime.Serialization;
-
-    [DataContractAttribute]
-    public class DefaultGateway
+    public class ConfigInterface
     {
-#pragma warning disable 0649
-        [DataMember(Name = "ipv4Address")]
-        private string ipv4Address;
-
-        [DataMember(Name = "ipv6Address")]
-        private string ipv6Address;
-#pragma warning restore 0649
-
-        public string InternetProtocolV4Address
+        public ConfigInterface(string configurationInterface, string address, string mask)
+            : this(configurationInterface)
         {
-            get
-            {
-                return this.ipv4Address;
-            }
+            this.InternetProtocolV4 = new ManualInternetProtocolV4Address();
+            this.InternetProtocolV4.ManualAddress = address;
+            this.InternetProtocolV4.ManualNetMask = mask;
         }
 
-        public string InternetProtocolV6Address
+        public ConfigInterface(string configurationInterface, string mode)
+            : this(configurationInterface)
         {
-            get
-            {
-                return this.ipv6Address;
-            }
+            this.ConfigurationMethod = mode;
         }
+
+        public ConfigInterface(string configurationInterface, string address, string mask, string mode)
+            : this(configurationInterface, address, mask)
+        {
+            this.ConfigurationMethod = mode;
+        }
+
+        private ConfigInterface(string iface)
+        {
+            this.Name = iface;
+        }
+
+        public string Name { get; set; }
+
+        public ManualInternetProtocolV4Address InternetProtocolV4 { get; set; }
+
+        public string ConfigurationMethod { get; set; }
     }
 }

@@ -28,52 +28,56 @@
 //
 // </copyright>
 
-using System;
-using System.Collections.Generic;
-using System.Timers;
-
 namespace Hbm.Devices.Scan.Announcing
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Timers;
+
     public class DeviceMonitor
     {
-        public event EventHandler<NewDeviceEventArgs> HandleNewDevice;
-        public event EventHandler<UpdateDeviceEventArgs> HandleUpdateDevice;
-        public event EventHandler<RemoveDeviceEventArgs> HandleRemoveDevice;
+        private readonly IDictionary<string, AnnounceTimer> deviceMap;
 
         private bool stopped;
-        private readonly IDictionary<string, AnnounceTimer> deviceMap;
 
         public DeviceMonitor()
         {
-            stopped = false;
-            deviceMap = new Dictionary<string, AnnounceTimer>();
+            this.stopped = false;
+            this.deviceMap = new Dictionary<string, AnnounceTimer>();
         }
+
+        public event EventHandler<NewDeviceEventArgs> HandleNewDevice;
+
+        public event EventHandler<UpdateDeviceEventArgs> HandleUpdateDevice;
+
+        public event EventHandler<RemoveDeviceEventArgs> HandleRemoveDevice;
 
         public void Close()
         {
-            lock (deviceMap)
+            lock (this.deviceMap)
             {
-                stopped = true;
+                this.stopped = true;
                 var keysToRemove = new List<string>();
-                foreach (KeyValuePair<string, AnnounceTimer> entry in deviceMap)
+                foreach (KeyValuePair<string, AnnounceTimer> entry in this.deviceMap)
                 {
-                    AnnounceTimer timer = deviceMap[entry.Key];
+                    AnnounceTimer timer = this.deviceMap[entry.Key];
                     timer.Stop();
                     timer.Close();
                     keysToRemove.Add(entry.Key);
                 }
+
                 foreach (var key in keysToRemove)
                 {
-                    deviceMap.Remove(key);
+                    this.deviceMap.Remove(key);
                 }
             }
         }
 
         public bool IsClosed()
         {
-            lock (deviceMap)
+            lock (this.deviceMap)
             {
-                return stopped;
+                return this.stopped;
             }
         }
 
@@ -82,34 +86,35 @@ namespace Hbm.Devices.Scan.Announcing
             if ((sender != null) && (args != null))
             {
                 Announce announce = args.Announce;
-                ArmTimer(announce);
+                this.ArmTimer(announce);
             }
         }
 
         private void ArmTimer(Announce announce)
         {
             string path = announce.Path;
-            int expriationMs = GetExpirationMilliSeconds(announce);
-            lock (deviceMap)
+            int expriationMs = this.GetExpirationMilliSeconds(announce);
+            lock (this.deviceMap)
             {
-                if (!stopped)
+                if (!this.stopped)
                 {
-                    if (deviceMap.ContainsKey(path))
+                    if (this.deviceMap.ContainsKey(path))
                     {
-                        AnnounceTimer timer = deviceMap[path];
+                        AnnounceTimer timer = this.deviceMap[path];
                         timer.Stop();
-                        Announce oldAnnounce = timer.announce;
+                        Announce oldAnnounce = timer.Announce;
                         if (!oldAnnounce.Equals(announce))
                         {
-                            timer.announce = announce;
-                            if (HandleUpdateDevice != null)
+                            timer.Announce = announce;
+                            if (this.HandleUpdateDevice != null)
                             {
                                 UpdateDeviceEventArgs updateDeviceEvent = new UpdateDeviceEventArgs();
                                 updateDeviceEvent.NewAnnounce = announce;
                                 updateDeviceEvent.OldAnnounce = oldAnnounce;
-                                HandleUpdateDevice(this, updateDeviceEvent);
+                                this.HandleUpdateDevice(this, updateDeviceEvent);
                             }
                         }
+
                         timer.Interval = expriationMs;
                         timer.Start();
                     }
@@ -117,14 +122,14 @@ namespace Hbm.Devices.Scan.Announcing
                     {
                         AnnounceTimer timer = new AnnounceTimer(expriationMs, announce);
                         timer.AutoReset = false;
-                        timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
-                        deviceMap.Add(path, timer);
+                        timer.Elapsed += new ElapsedEventHandler(this.OnTimedEvent);
+                        this.deviceMap.Add(path, timer);
                         timer.Start();
-                        if (HandleNewDevice != null)
+                        if (this.HandleNewDevice != null)
                         {
                             NewDeviceEventArgs newDeviceEvent = new NewDeviceEventArgs();
                             newDeviceEvent.Announce = announce;
-                            HandleNewDevice(this, newDeviceEvent);
+                            this.HandleNewDevice(this, newDeviceEvent);
                         }
                     }
                 }
@@ -138,6 +143,7 @@ namespace Hbm.Devices.Scan.Announcing
             {
                 expiration = 6;
             }
+
             return expiration * 1000;
         }
 
@@ -147,45 +153,30 @@ namespace Hbm.Devices.Scan.Announcing
             {
                 AnnounceTimer timer = (AnnounceTimer)source;
                 timer.Stop();
-                string path = timer.announce.Path;
-                lock (deviceMap)
+                string path = timer.Announce.Path;
+                lock (this.deviceMap)
                 {
-                    deviceMap.Remove(path);
+                    this.deviceMap.Remove(path);
                 }
-                if (HandleRemoveDevice != null)
+
+                if (this.HandleRemoveDevice != null)
                 {
                     RemoveDeviceEventArgs removeDeviceEvent = new RemoveDeviceEventArgs();
-                    removeDeviceEvent.Announce = timer.announce;
-                    HandleRemoveDevice(this, removeDeviceEvent);
+                    removeDeviceEvent.Announce = timer.Announce;
+                    this.HandleRemoveDevice(this, removeDeviceEvent);
                 }
             }
         }
 
         private class AnnounceTimer : System.Timers.Timer
         {
-            internal Announce announce;
-
             internal AnnounceTimer(double expire, Announce announce)
                 : base(expire)
             {
-                this.announce = announce;
+                this.Announce = announce;
             }
+
+            internal Announce Announce { get; set; }
         }
-    }
-
-    public class NewDeviceEventArgs : System.EventArgs
-    {
-        public Announce Announce { get; internal set; }
-    }
-
-    public class UpdateDeviceEventArgs : System.EventArgs
-    {
-        public Announce NewAnnounce { get; internal set; }
-        public Announce OldAnnounce { get; internal set; }
-    }
-
-    public class RemoveDeviceEventArgs : System.EventArgs
-    {
-        public Announce Announce { get; internal set; }
     }
 }

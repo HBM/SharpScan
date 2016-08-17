@@ -28,14 +28,20 @@
 //
 // </copyright>
 
-using System.Globalization;
-using System.Runtime.Serialization;
-
 namespace Hbm.Devices.Scan
 {
+    using System.Globalization;
+    using System.Runtime.Serialization;
+
     [DataContractAttribute]
     public abstract class JsonRpc
     {
+        protected JsonRpc(string method)
+        {
+            this.Version = "2.0";
+            this.Method = method;
+        }
+
         [DataMember(Name = "jsonrpc")]
         public string Version { get; private set; }
 
@@ -44,19 +50,14 @@ namespace Hbm.Devices.Scan
 
         public string JsonString { get; internal set; }
 
-        protected JsonRpc(string method)
-        {
-            Version = "2.0";
-            Method = method;
-        }
-
         public bool Equals(JsonRpc other)
         {
             if (object.ReferenceEquals(other, null))
             {
                 return false;
             }
-            return string.Compare(JsonString, other.JsonString, CultureInfo.InvariantCulture, CompareOptions.Ordinal) == 0;
+
+            return string.Compare(this.JsonString, other.JsonString, CultureInfo.InvariantCulture, CompareOptions.Ordinal) == 0;
         }
     }
 }

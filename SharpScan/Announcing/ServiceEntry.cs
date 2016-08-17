@@ -1,4 +1,4 @@
-﻿// <copyright file="DefaultGateway.cs" company="Hottinger Baldwin Messtechnik GmbH">
+﻿// <copyright file="ServiceEntry.cs" company="Hottinger Baldwin Messtechnik GmbH">
 //
 // SharpScan, a library for scanning and configuring HBM devices.
 //
@@ -33,29 +33,36 @@ namespace Hbm.Devices.Scan.Announcing
     using System.Runtime.Serialization;
 
     [DataContractAttribute]
-    public class DefaultGateway
+    public class ServiceEntry
     {
-#pragma warning disable 0649
-        [DataMember(Name = "ipv4Address")]
-        private string ipv4Address;
+        public const string ServiceDataAcquisition = "daqStream";
+        public const string ServiceHbmProtocol = "hbmProtocol";
+        public const string ServiceHttp = "http";
+        public const string ServiceJetDaemon = "jetd";
+        public const string ServiceJetWebSockets = "jetws";
+        public const string ServiceSecureShell = "ssh";
 
-        [DataMember(Name = "ipv6Address")]
-        private string ipv6Address;
+#pragma warning disable 0649
+        [DataMember(Name = "type")]
+        private string serviceType;
+
+        [DataMember(Name = "port")]
+        private int port;
 #pragma warning restore 0649
 
-        public string InternetProtocolV4Address
+        public string ServiceType
         {
             get
             {
-                return this.ipv4Address;
+                return this.serviceType;
             }
         }
 
-        public string InternetProtocolV6Address
+        public int Port
         {
             get
             {
-                return this.ipv6Address;
+                return this.port;
             }
         }
     }

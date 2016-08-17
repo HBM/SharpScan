@@ -1,4 +1,4 @@
-﻿// <copyright file="DefaultGateway.cs" company="Hottinger Baldwin Messtechnik GmbH">
+﻿// <copyright file="UpdateDeviceEventArgs.cs" company="Hottinger Baldwin Messtechnik GmbH">
 //
 // SharpScan, a library for scanning and configuring HBM devices.
 //
@@ -30,33 +30,10 @@
 
 namespace Hbm.Devices.Scan.Announcing
 {
-    using System.Runtime.Serialization;
-
-    [DataContractAttribute]
-    public class DefaultGateway
+    public class UpdateDeviceEventArgs : System.EventArgs
     {
-#pragma warning disable 0649
-        [DataMember(Name = "ipv4Address")]
-        private string ipv4Address;
+        public Announce NewAnnounce { get; internal set; }
 
-        [DataMember(Name = "ipv6Address")]
-        private string ipv6Address;
-#pragma warning restore 0649
-
-        public string InternetProtocolV4Address
-        {
-            get
-            {
-                return this.ipv4Address;
-            }
-        }
-
-        public string InternetProtocolV6Address
-        {
-            get
-            {
-                return this.ipv6Address;
-            }
-        }
+        public Announce OldAnnounce { get; internal set; }
     }
 }

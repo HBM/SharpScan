@@ -28,58 +28,58 @@
 //
 // </copyright>
 
-using Hbm.Devices.Scan.Configure;
-
-using System;
-using System.IO;
-using System.Net.NetworkInformation;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
-using System.Text;
-
 namespace Hbm.Devices.Scan.Announcing
 {
+    using System;
+    using System.IO;
+    using System.Net.NetworkInformation;
+    using System.Runtime.Serialization;
+    using System.Runtime.Serialization.Json;
+    using System.Text;
+
     public class AnnounceDeserializer
     {
-        public event EventHandler<AnnounceEventArgs> HandleMessage;
-
         private readonly DataContractJsonSerializer deserializer;
         private readonly AnnounceCache cache;
         private readonly AnnounceEventArgs eventArgs;
 
-        public AnnounceDeserializer(Int32 cacheSize)
+        public AnnounceDeserializer(int cacheSize)
         {
-            deserializer = new DataContractJsonSerializer(typeof(Announce));
-            cache = new AnnounceCache(cacheSize);
-            eventArgs = new AnnounceEventArgs();
+            this.deserializer = new DataContractJsonSerializer(typeof(Announce));
+            this.cache = new AnnounceCache(cacheSize);
+            this.eventArgs = new AnnounceEventArgs();
         }
 
-        public AnnounceDeserializer() : this(AnnounceCache.DefaultCacheSize) { }
+        public AnnounceDeserializer() : this(AnnounceCache.DefaultCacheSize)
+        {
+        }
+
+        public event EventHandler<AnnounceEventArgs> HandleMessage;
 
         public void HandleEvent(object sender, MulticastMessageEventArgs args)
         {
-            if ((sender != null) && (HandleMessage != null) && (args != null))
+            if ((sender != null) && (this.HandleMessage != null) && (args != null))
             {
                 string jsonString = args.AnnounceJson;
                 NetworkInterface incomingIF = args.IncomingInterface;
 
-                if (!String.IsNullOrEmpty(jsonString))
+                if (!string.IsNullOrEmpty(jsonString))
                 {
-                    Announce announce = cache.Get(jsonString);
+                    Announce announce = this.cache.Get(jsonString);
                     if (announce == null)
                     {
                         using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(jsonString)))
                         {
                             try
                             {
-                                announce = (Announce)deserializer.ReadObject(ms);
+                                announce = (Announce)this.deserializer.ReadObject(ms);
                                 if (MandatoryKeysPresent(announce))
                                 {
                                     announce.JsonString = jsonString;
-                                    announce.identifyCommunicationPath(incomingIF);
-                                    cache.Add(jsonString, announce);
-                                    eventArgs.Announce = announce;
-                                    HandleMessage(this, eventArgs);
+                                    announce.IdentifyCommunicationPath(incomingIF);
+                                    this.cache.Add(jsonString, announce);
+                                    this.eventArgs.Announce = announce;
+                                    this.HandleMessage(this, this.eventArgs);
                                 }
                             }
                             catch (SerializationException)
@@ -90,11 +90,16 @@ namespace Hbm.Devices.Scan.Announcing
                     }
                     else
                     {
-                        eventArgs.Announce = announce;
-                        HandleMessage(this, eventArgs);
+                        this.eventArgs.Announce = announce;
+                        this.HandleMessage(this, this.eventArgs);
                     }
                 }
             }
+        }
+
+        internal AnnounceCache GetCache()
+        {
+            return this.cache;
         }
 
         private static bool MandatoryKeysPresent(Announce announce)
@@ -110,15 +115,17 @@ namespace Hbm.Devices.Scan.Announcing
         private static bool KeysInAnnounceParamsPresent(AnnounceParameters parameters)
         {
             if ((parameters == null) ||
-                (String.IsNullOrEmpty(parameters.ApiVersion)) ||
-                (!parameters.ApiVersion.Equals("1.0")))
+                string.IsNullOrEmpty(parameters.ApiVersion) ||
+                !parameters.ApiVersion.Equals("1.0"))
             {
                 return false;
             }
-            if ((parameters.Router != null) && (String.IsNullOrEmpty(parameters.Router.Uuid)))
+
+            if ((parameters.Router != null) && string.IsNullOrEmpty(parameters.Router.Uuid))
             {
                 return false;
             }
+
             return KeysInDevicePresent(parameters.Device) && KeysInNetSettingsPresent(parameters.NetSettings);
         }
 
@@ -126,36 +133,23 @@ namespace Hbm.Devices.Scan.Announcing
         {
             if ((netSettings == null) ||
                 (netSettings.Interface == null) ||
-                (String.IsNullOrEmpty(netSettings.Interface.Name)))
+                string.IsNullOrEmpty(netSettings.Interface.Name))
             {
                 return false;
             }
+
             return true;
         }
 
         private static bool KeysInDevicePresent(AnnouncedDevice device)
         {
             if ((device == null) ||
-                (String.IsNullOrEmpty(device.Uuid)))
+                string.IsNullOrEmpty(device.Uuid))
             {
                 return false;
             }
+
             return true;
         }
-
-        internal AnnounceCache GetCache()
-        {
-            return cache;
-        }
-    }
-
-    public class AnnounceEventArgs : System.EventArgs
-    {
-        public Announce Announce { get; internal set; }
-    }
-
-    public class JsonRpcResponseEventArgs : System.EventArgs
-    {
-        public JsonRpcResponse Response { get; internal set; }
     }
 }

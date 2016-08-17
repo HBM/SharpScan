@@ -28,90 +28,23 @@
 //
 // </copyright>
 
-using Hbm.Devices.Scan.Announcing;
-using System.Threading;
-
 namespace Hbm.Devices.Scan.Configure
 {
+    using System.Threading;
+
     public class ConfigRequest : JsonRpc
     {
-        public int Id { get; set; }
-        internal ConfigParams ConfigParameters { get; set; }
-
         private static int idCounter;
 
         public ConfigRequest(string uuid, ConfigNetSettings configNetSettings)
             : base("configure")
         {
-            Id = Interlocked.Increment(ref idCounter);
-            ConfigParameters = new ConfigParams(uuid, configNetSettings);
+            this.Id = Interlocked.Increment(ref idCounter);
+            this.ConfigParameters = new ConfigParams(uuid, configNetSettings);
         }
 
-    }
+        public int Id { get; set; }
 
-    internal class ConfigParams
-    {
-        public Device device { get; set; }
-        public ConfigNetSettings netSettings { get; set; }
-        public int ttl { get; set; }
-
-        public ConfigParams(string uuid, ConfigNetSettings cns)
-        {
-            device = new Device(uuid);
-            netSettings = cns;
-            ttl = 1;
-        }
-    }
-
-    public class ConfigNetSettings
-    {
-        public ConfigInterface ConfigurationInterface { get; set; }
-        public DefaultGateway DefaultGateway { get; set; }
-
-        public ConfigNetSettings(ConfigInterface configurationInterface) : this(configurationInterface, null) { }
-        public ConfigNetSettings(DefaultGateway gateway) : this(null, gateway) { }
-        public ConfigNetSettings(ConfigInterface configurationInterface, DefaultGateway gateway)
-        {
-            this.ConfigurationInterface = configurationInterface;
-            DefaultGateway = gateway;
-        }
-    }
-
-    public class ConfigInterface
-    {
-        public string Name { get; set; }
-        public ManualInternetProtocolV4Address InternetProtocolV4 { get; set; }
-        public string ConfigurationMethod { get; set; }
-
-        private ConfigInterface(string iface)
-        {
-            Name = iface;
-        }
-
-        public ConfigInterface(string configurationInterface, string address, string mask)
-            : this(configurationInterface)
-        {
-            InternetProtocolV4 = new ManualInternetProtocolV4Address();
-            InternetProtocolV4.ManualAddress = address;
-            InternetProtocolV4.ManualNetMask = mask;
-        }
-
-        public ConfigInterface(string configurationInterface, string mode)
-            : this(configurationInterface)
-        {
-            ConfigurationMethod = mode;
-        }
-
-        public ConfigInterface(string configurationInterface, string address, string mask, string mode)
-            : this(configurationInterface, address, mask)
-        {
-            ConfigurationMethod = mode;
-        }
-    }
-
-    public class ManualInternetProtocolV4Address
-    {
-        public string ManualAddress { get; set; }
-        public string ManualNetMask { get; set; }
+        internal ConfigParams ConfigParameters { get; set; }
     }
 }

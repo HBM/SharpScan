@@ -28,28 +28,31 @@
 //
 // </copyright>
 
-using System;
-
 namespace Hbm.Devices.Scan.Announcing
 {
+    using System;
+
     internal class AnnounceCache
     {
-        public const Int32 DefaultCacheSize = 10000;
+        public const int DefaultCacheSize = 10000;
 
         private readonly LruCache<string, Announce> parsedMessages;
         private readonly LruCache<string, string> lastDeviceAnnounceString;
 
-        internal AnnounceCache() : this(DefaultCacheSize) { }
-        internal AnnounceCache(Int32 cacheSize)
+        internal AnnounceCache() : this(DefaultCacheSize)
         {
-            parsedMessages = new LruCache<string, Announce>(cacheSize);
-            lastDeviceAnnounceString = new LruCache<string, string>(cacheSize);
+        }
+
+        internal AnnounceCache(int cacheSize)
+        {
+            this.parsedMessages = new LruCache<string, Announce>(cacheSize);
+            this.lastDeviceAnnounceString = new LruCache<string, string>(cacheSize);
         }
 
         internal Announce Get(string announceString)
         {
             Announce announce;
-            parsedMessages.TryGetValue(announceString, out announce);
+            this.parsedMessages.TryGetValue(announceString, out announce);
             return announce;
         }
 
@@ -57,23 +60,24 @@ namespace Hbm.Devices.Scan.Announcing
         {
             string path = announce.Path;
             string lastAnnounceString;
-            if (lastDeviceAnnounceString.TryGetValue(path, out lastAnnounceString))
+            if (this.lastDeviceAnnounceString.TryGetValue(path, out lastAnnounceString))
             {
-                parsedMessages.Remove(lastAnnounceString);
-                lastDeviceAnnounceString.Remove(path);
+                this.parsedMessages.Remove(lastAnnounceString);
+                this.lastDeviceAnnounceString.Remove(path);
             }
-            parsedMessages.Add(announceString, announce);
-            lastDeviceAnnounceString.Add(path, announceString);
+
+            this.parsedMessages.Add(announceString, announce);
+            this.lastDeviceAnnounceString.Add(path, announceString);
         }
 
         internal int Size()
         {
-            return parsedMessages.Count;
+            return this.parsedMessages.Count;
         }
 
         internal int LastAnnounceSize()
         {
-            return lastDeviceAnnounceString.Count;
+            return this.lastDeviceAnnounceString.Count;
         }
     }
 }

@@ -28,20 +28,27 @@
 //
 // </copyright>
 
-using System;
-
 namespace Hbm.Devices.Scan.Announcing.Filter
 {
+    using System;
+
     public class AnnounceFilter
     {
-        public event EventHandler<AnnounceEventArgs> HandleMessage;
-
         private readonly IMatcher matcher;
-        public IMatcher Matcher { get { return matcher; } }
 
         public AnnounceFilter(IMatcher matcher)
         {
             this.matcher = matcher;
+        }
+
+        public event EventHandler<AnnounceEventArgs> HandleMessage;
+
+        public IMatcher Matcher
+        {
+            get
+            {
+                return this.matcher;
+            }
         }
 
         public void HandleEvent(object sender, AnnounceEventArgs args)
@@ -49,9 +56,9 @@ namespace Hbm.Devices.Scan.Announcing.Filter
             if ((sender != null) && (args != null))
             {
                 Announce announce = args.Announce;
-                if (matcher.Match(announce))
+                if (this.matcher.Match(announce))
                 {
-                    HandleMessage(this, args);
+                    this.HandleMessage(this, args);
                 }
             }
         }

@@ -28,18 +28,21 @@
 //
 // </copyright>
 
-using System;
-
 namespace Hbm.Devices.Scan.Announcing.Filter
 {
+    using System;
+
     public class UuidMatcher : IMatcher
     {
+        private readonly string[] uuids;
+
         public UuidMatcher(string[] uuids)
         {
             if (uuids == null)
             {
                 throw new ArgumentNullException("uuids");
             }
+
             this.uuids = (string[])uuids.Clone();
         }
 
@@ -49,21 +52,21 @@ namespace Hbm.Devices.Scan.Announcing.Filter
             {
                 return false;
             }
-            foreach (string uuid in uuids)
+
+            foreach (string uuid in this.uuids)
             {
                 if (string.Compare(announce.Parameters.Device.Uuid, uuid, StringComparison.Ordinal) == 0)
                 {
                     return true;
                 }
             }
+
             return false;
         }
 
         public string[] GetFilterStrings()
         {
-            return (string[])uuids.Clone();
+            return (string[])this.uuids.Clone();
         }
-
-        private readonly string[] uuids;
     }
 }

@@ -1,4 +1,4 @@
-﻿// <copyright file="DefaultGateway.cs" company="Hottinger Baldwin Messtechnik GmbH">
+﻿// <copyright file="ConfigParams.cs" company="Hottinger Baldwin Messtechnik GmbH">
 //
 // SharpScan, a library for scanning and configuring HBM devices.
 //
@@ -28,35 +28,21 @@
 //
 // </copyright>
 
-namespace Hbm.Devices.Scan.Announcing
+namespace Hbm.Devices.Scan.Configure
 {
-    using System.Runtime.Serialization;
-
-    [DataContractAttribute]
-    public class DefaultGateway
+    internal class ConfigParams
     {
-#pragma warning disable 0649
-        [DataMember(Name = "ipv4Address")]
-        private string ipv4Address;
-
-        [DataMember(Name = "ipv6Address")]
-        private string ipv6Address;
-#pragma warning restore 0649
-
-        public string InternetProtocolV4Address
+        public ConfigParams(string uuid, ConfigNetSettings cns)
         {
-            get
-            {
-                return this.ipv4Address;
-            }
+            this.Device = new Device(uuid);
+            this.NetSettings = cns;
+            this.Ttl = 1;
         }
 
-        public string InternetProtocolV6Address
-        {
-            get
-            {
-                return this.ipv6Address;
-            }
-        }
+        public Device Device { get; set; }
+
+        public ConfigNetSettings NetSettings { get; set; }
+
+        public int Ttl { get; set; }
     }
 }

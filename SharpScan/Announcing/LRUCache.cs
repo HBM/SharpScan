@@ -48,54 +48,59 @@ namespace Hbm.Devices.Scan.Announcing
 {
     internal class LruCache<TKey, TValue>
     {
-        class Node
-        {
-            internal Node(TKey key, TValue value)
-            {
-                this.key = key;
-                this.value = value;
-            }
-            internal TKey key;
-            internal TValue value;
-        }
-
         private readonly IDictionary<TKey, LinkedListNode<Node>> map;
+
         private readonly LinkedList<Node> list;
 
         private readonly int capacity;
-        public int Capacity { get { return capacity; } }
-        public Int32 Count { get { return map.Count; } }
 
         internal LruCache(int capacity)
         {
-            map = new Dictionary<TKey, LinkedListNode<Node>>(capacity);
-            list = new LinkedList<Node>();
+            this.map = new Dictionary<TKey, LinkedListNode<Node>>(capacity);
+            this.list = new LinkedList<Node>();
             this.capacity = capacity;
+        }
+
+        public int Capacity
+        {
+            get
+            {
+                return this.capacity;
+            }
+        }
+
+        public int Count
+        {
+            get
+            {
+                return this.map.Count;
+            }
         }
 
         internal void Add(TKey key, TValue value)
         {
-            if (map.Count >= capacity)
+            if (this.map.Count >= this.capacity)
             {
-                LinkedListNode<Node> nodeToRemove = list.Last;
-                list.RemoveLast();
+                LinkedListNode<Node> nodeToRemove = this.list.Last;
+                this.list.RemoveLast();
                 Node node = nodeToRemove.Value;
-                map.Remove(node.key);
+                this.map.Remove(node.Key);
             }
+
             Node newNode = new Node(key, value);
             LinkedListNode<Node> listNode = new LinkedListNode<Node>(newNode);
-            map.Add(key, listNode);
-            list.AddFirst(listNode);
+            this.map.Add(key, listNode);
+            this.list.AddFirst(listNode);
         }
 
         internal bool TryGetValue(TKey key, out TValue value)
         {
             LinkedListNode<Node> node;
-            if (map.TryGetValue(key, out node))
+            if (this.map.TryGetValue(key, out node))
             {
-                list.Remove(node);
-                list.AddFirst(node);
-                value = node.Value.value;
+                this.list.Remove(node);
+                this.list.AddFirst(node);
+                value = node.Value.Value;
                 return true;
             }
             else
@@ -108,10 +113,39 @@ namespace Hbm.Devices.Scan.Announcing
         internal void Remove(TKey key)
         {
             LinkedListNode<Node> node;
-            if (map.TryGetValue(key, out node))
+            if (this.map.TryGetValue(key, out node))
             {
-                map.Remove(key);
-                list.Remove(node);
+                this.map.Remove(key);
+                this.list.Remove(node);
+            }
+        }
+
+        internal class Node
+        {
+            private TKey key;
+
+            private TValue value;
+
+            internal Node(TKey key, TValue value)
+            {
+                this.key = key;
+                this.value = value;
+            }
+
+            public TKey Key
+            {
+                get
+                {
+                    return this.key;
+                }
+            }
+
+            public TValue Value
+            {
+                get
+                {
+                    return this.value;
+                }
             }
         }
     }

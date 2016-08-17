@@ -28,10 +28,10 @@
 //
 // </copyright>
 
-using System;
-
 namespace Hbm.Devices.Scan.Announcing.Filter
 {
+    using System;
+
     public class FamilyTypeMatcher : IMatcher
     {
         public const string QuantumX = "QuantumX";
@@ -45,6 +45,7 @@ namespace Hbm.Devices.Scan.Announcing.Filter
             {
                 throw new ArgumentNullException("familyTypes");
             }
+
             this.familyTypes = (string[])familyTypes.Clone();
         }
 
@@ -54,19 +55,21 @@ namespace Hbm.Devices.Scan.Announcing.Filter
             {
                 return false;
             }
-            foreach (string familyType in familyTypes)
+
+            foreach (string familyType in this.familyTypes)
             {
                 if (string.Compare(announce.Parameters.Device.FamilyType, familyType, StringComparison.Ordinal) == 0)
                 {
                     return true;
                 }
             }
+
             return false;
         }
 
         public string[] GetFilterStrings()
         {
-            return (string[])familyTypes.Clone();
+            return (string[])this.familyTypes.Clone();
         }
     }
 }

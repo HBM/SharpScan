@@ -41,22 +41,44 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Announcing\AnnouncedDevice.cs" />
     <Compile Include="AnnounceReceiver.cs" />
     <Compile Include="Announcing\Announce.cs" />
     <Compile Include="Announcing\AnnounceCache.cs" />
     <Compile Include="Announcing\AnnounceDeserializer.cs" />
+    <Compile Include="Announcing\AnnounceEventArgs.cs" />
+    <Compile Include="Announcing\AnnounceParameters.cs" />
     <Compile Include="Announcing\DefaultGateway.cs" />
-    <Compile Include="Announcing\DeviceMonitor.cs" />
+    <Compile Include="Announcing\DeviceMonitor.cs">
+      <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="Announcing\Filter\AnnounceFilter.cs" />
-    <Compile Include="Announcing\Filter\FamilytypeMatcher.cs" />
+    <Compile Include="Announcing\Filter\FamilytypeMatcher.cs">
+      <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="Announcing\Filter\IMatcher.cs" />
     <Compile Include="Announcing\Filter\InterfaceMatcher.cs" />
     <Compile Include="Announcing\Filter\UuidMatcher.cs" />
+    <Compile Include="Announcing\InternetProtocolV4Address.cs" />
+    <Compile Include="Announcing\InternetProtocolV6Address.cs" />
+    <Compile Include="Announcing\NewDeviceEventArgs.cs" />
+    <Compile Include="Announcing\RemoveDeviceEventArgs.cs" />
+    <Compile Include="Announcing\UpdateDeviceEventArgs.cs" />
+    <Compile Include="Configure\JsonRpcResponseEventArgs.cs" />
     <Compile Include="Announcing\LRUCache.cs" />
+    <Compile Include="Announcing\NetInterface.cs" />
+    <Compile Include="Announcing\NetSettings.cs" />
+    <Compile Include="Announcing\Router.cs" />
+    <Compile Include="Announcing\ServiceEntry.cs" />
+    <Compile Include="Configure\ConfigNetSettings.cs" />
+    <Compile Include="Configure\ConfigInterface.cs" />
+    <Compile Include="Configure\ConfigParams.cs" />
     <Compile Include="Configure\ConfigRequest.cs" />
     <Compile Include="Configure\Device.cs" />
     <Compile Include="Configure\JsonRpcResponse.cs" />
+    <Compile Include="Configure\ManualInternetProtocolV4Address.cs" />
     <Compile Include="JsonRpc.cs" />
+    <Compile Include="MulticastMessageEventArgs.cs" />
     <Compile Include="MulticastMessageReceiver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScanConstants.Designer.cs" />

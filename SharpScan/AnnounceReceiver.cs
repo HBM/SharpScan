@@ -28,18 +28,18 @@
 //
 // </copyright>
 
-using System;
-using System.Globalization;
-
 namespace Hbm.Devices.Scan
 {
+    using System;
+    using System.Globalization;
+
     public class AnnounceReceiver : MulticastMessageReceiver
     {
-        static readonly string announceAddress = Hbm.Devices.Scan.ScanConstants.announceAddress;
-        static readonly int announcePort = Int32.Parse(Hbm.Devices.Scan.ScanConstants.announcePort, CultureInfo.InvariantCulture);
+        private static readonly string AnnounceAddress = Hbm.Devices.Scan.ScanConstants.announceAddress;
+        private static readonly int AnnouncePort = int.Parse(Hbm.Devices.Scan.ScanConstants.announcePort, CultureInfo.InvariantCulture);
 
         public AnnounceReceiver()
-            : base(announceAddress, announcePort)
+            : base(AnnounceAddress, AnnouncePort)
         {
         }
     }

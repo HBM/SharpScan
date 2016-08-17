@@ -32,13 +32,15 @@ namespace Hbm.Devices.Scan.Configure
 {
     public class Device
     {
-        public string Uuid { get; set; }
-
-        internal Device() { }
+        internal Device()
+        {
+        }
 
         internal Device(string uuid)
         {
-            Uuid = uuid;
+            this.Uuid = uuid;
         }
+
+        public string Uuid { get; set; }
     }
 }

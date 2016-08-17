@@ -28,19 +28,19 @@
 //
 // </copyright>
 
-using System;
-using System.Collections.Generic;
-using System.Net.NetworkInformation;
-
 namespace Hbm.Devices.Scan.Announcing.Filter
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Net.NetworkInformation;
+
     public class InterfaceMatcher : IMatcher
     {
         private readonly HashSet<string> observeredInterfaces;
 
         public InterfaceMatcher()
         {
-            observeredInterfaces = new HashSet<string>();
+            this.observeredInterfaces = new HashSet<string>();
         }
 
         public InterfaceMatcher(ICollection<NetworkInterface> interfaces)
@@ -50,11 +50,12 @@ namespace Hbm.Devices.Scan.Announcing.Filter
             {
                 throw new ArgumentNullException("interfaces");
             }
+
             foreach (NetworkInterface iface in interfaces)
             {
-                lock (observeredInterfaces)
+                lock (this.observeredInterfaces)
                 {
-                    observeredInterfaces.Add(iface.Id);
+                    this.observeredInterfaces.Add(iface.Id);
                 }
             }
         }
@@ -65,9 +66,10 @@ namespace Hbm.Devices.Scan.Announcing.Filter
             {
                 throw new ArgumentNullException("networkInterface");
             }
-            lock (observeredInterfaces)
+
+            lock (this.observeredInterfaces)
             {
-                observeredInterfaces.Add(networkInterface.Id);
+                this.observeredInterfaces.Add(networkInterface.Id);
             }
         }
 
@@ -77,9 +79,10 @@ namespace Hbm.Devices.Scan.Announcing.Filter
             {
                 throw new ArgumentNullException("networkInterface");
             }
-            lock (observeredInterfaces)
+
+            lock (this.observeredInterfaces)
             {
-                observeredInterfaces.Remove(networkInterface.Id);
+                this.observeredInterfaces.Remove(networkInterface.Id);
             }
         }
 
@@ -89,9 +92,10 @@ namespace Hbm.Devices.Scan.Announcing.Filter
             {
                 return false;
             }
-            lock (observeredInterfaces)
+
+            lock (this.observeredInterfaces)
             {
-                return observeredInterfaces.Contains(announce.IncomingInterface.Id);
+                return this.observeredInterfaces.Contains(announce.IncomingInterface.Id);
             }
         }
     }

@@ -1,0 +1,128 @@
+﻿// <copyright file="AnnouncedDevice.cs" company="Hottinger Baldwin Messtechnik GmbH">
+//
+// SharpScan, a library for scanning and configuring HBM devices.
+//
+// The MIT License (MIT)
+//
+// Copyright (C) Hottinger Baldwin Messtechnik GmbH
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+//
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+// BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+// ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//
+// </copyright>
+
+namespace Hbm.Devices.Scan.Announcing
+{
+    using System.Runtime.Serialization;
+
+    [DataContractAttribute]
+    public class AnnouncedDevice
+    {
+#pragma warning disable 0649
+        [DataMember(Name = "uuid")]
+        private string uuid;
+
+        [DataMember(Name = "name")]
+        private string name;
+
+        [DataMember(Name = "type")]
+        private string deviceType;
+
+        [DataMember(Name = "label")]
+        private string label;
+
+        [DataMember(Name = "familyType")]
+        private string familyType;
+
+        [DataMember(Name = "hardwareId")]
+        private string hardwareId;
+
+        [DataMember(Name = "firmwareVersion")]
+        private string firmwareVersion;
+
+        [DataMember(Name = "isRouter")]
+        private bool isRouter;
+#pragma warning restore 0649
+
+        public string Uuid
+        {
+            get
+            {
+                return this.uuid;
+            }
+        }
+
+        public string Name
+        {
+            get
+            {
+                return this.name;
+            }
+        }
+
+        public string DeviceType
+        {
+            get
+            {
+                return this.deviceType;
+            }
+        }
+
+        public string Label
+        {
+            get
+            {
+                return this.label;
+            }
+        }
+
+        public string FamilyType
+        {
+            get
+            {
+                return this.familyType;
+            }
+        }
+
+        public string HardwareId
+        {
+            get
+            {
+                return this.hardwareId;
+            }
+        }
+
+        public string FirmwareVersion
+        {
+            get
+            {
+                return this.firmwareVersion;
+            }
+        }
+
+        public bool IsRouter
+        {
+            get
+            {
+                return this.isRouter;
+            }
+        }
+    }
+}

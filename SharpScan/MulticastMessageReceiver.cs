@@ -41,13 +41,14 @@ namespace Hbm.Devices.Scan
     public class MulticastMessageReceiver
     {
         private readonly Socket socket;
-        private EndPoint endPoint;
         private readonly IPAddress multicastIP;
         private readonly byte[] receiveBuffer;
 
         private readonly Dictionary<int, NetworkInterface> interfaceMap;
         private readonly List<IPAddress> multicastInterfaces;
         private readonly MulticastMessageEventArgs eventArgs;
+
+        private EndPoint endPoint;
 
         public MulticastMessageReceiver(string multicastIP, int port)
             : this(IPAddress.Parse(multicastIP), port)
@@ -61,7 +62,7 @@ namespace Hbm.Devices.Scan
             this.multicastInterfaces = new List<IPAddress>();
 
             Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            eventArgs = new MulticastMessageEventArgs();
+            this.eventArgs = new MulticastMessageEventArgs();
             try
             {
                 s.ReceiveBufferSize = 128000;
@@ -201,9 +202,9 @@ namespace Hbm.Devices.Scan
 
                     if (this.HandleMessage != null)
                     {
-                        eventArgs.IncomingInterface = incomingIF;
-                        eventArgs.AnnounceJson = message;
-                        this.HandleMessage(this, eventArgs);
+                        this.eventArgs.IncomingInterface = incomingIF;
+                        this.eventArgs.AnnounceJson = message;
+                        this.HandleMessage(this, this.eventArgs);
                     }
                 }
 
@@ -241,11 +242,5 @@ namespace Hbm.Devices.Scan
 
             return iface;
         }
-    }
-
-    public class MulticastMessageEventArgs : System.EventArgs
-    {
-        public string AnnounceJson { get; internal set; }
-        public NetworkInterface IncomingInterface { get; internal set; }
     }
 }

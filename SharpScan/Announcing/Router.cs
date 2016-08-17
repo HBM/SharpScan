@@ -1,4 +1,4 @@
-﻿// <copyright file="DefaultGateway.cs" company="Hottinger Baldwin Messtechnik GmbH">
+﻿// <copyright file="Router.cs" company="Hottinger Baldwin Messtechnik GmbH">
 //
 // SharpScan, a library for scanning and configuring HBM devices.
 //
@@ -33,29 +33,18 @@ namespace Hbm.Devices.Scan.Announcing
     using System.Runtime.Serialization;
 
     [DataContractAttribute]
-    public class DefaultGateway
+    public class Router
     {
 #pragma warning disable 0649
-        [DataMember(Name = "ipv4Address")]
-        private string ipv4Address;
-
-        [DataMember(Name = "ipv6Address")]
-        private string ipv6Address;
+        [DataMember(Name = "uuid")]
+        private string uuid;
 #pragma warning restore 0649
 
-        public string InternetProtocolV4Address
+        public string Uuid
         {
             get
             {
-                return this.ipv4Address;
-            }
-        }
-
-        public string InternetProtocolV6Address
-        {
-            get
-            {
-                return this.ipv6Address;
+                return this.uuid;
             }
         }
     }
