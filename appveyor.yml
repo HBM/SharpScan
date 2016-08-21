@@ -46,7 +46,7 @@ build_script:
         -d "Appveyor build." `
         --codeVersion "$env:APPVEYOR_BUILD_VERSION"
       } else {
-      	msbuild "$Env:APPVEYOR_BUILD_FOLDER\src\build.xml" "/p:Configuration=$Env:CONFIGURATION" /t:Coverage /verbosity:minimal
+      	msbuild "$Env:APPVEYOR_BUILD_FOLDER\build.xml" "/p:Configuration=$Env:CONFIGURATION" /t:Coverage /verbosity:minimal
       }
 
 after_build:
