@@ -23,7 +23,7 @@ install:
   - nuget install -ExcludeVersion PublishCoverity
 
 before_build:
-  - nuget restore ".\SharpJet.sln"
+  - nuget restore ".\SharpScan.sln"
 
 build_script:
   - ps: |
