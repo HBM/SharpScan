@@ -1,4 +1,4 @@
-﻿// <copyright file="ConfigurationRequest.cs" company="Hottinger Baldwin Messtechnik GmbH">
+﻿// <copyright file="AnnounceReceiver.cs" company="Hottinger Baldwin Messtechnik GmbH">
 //
 // SharpScan, a library for scanning and configuring HBM devices.
 //
@@ -28,38 +28,18 @@
 //
 // </copyright>
 
-namespace Hbm.Devices.Scan.Configure
+namespace Hbm.Devices.Scan.Announcing
 {
-    using System;
-    using System.Runtime.Serialization;
+    using System.Globalization;
 
-    [DataContractAttribute]
-    internal class ConfigurationRequest : JsonRpc
+    public class AnnounceReceiver : MulticastMessageReceiver
     {
-        [DataMember(Name = "params")]
-        private ConfigurationParams parameters;
+        private static readonly string AnnounceAddress = ScanConstants.announceAddress;
+        private static readonly int AnnouncePort = int.Parse(ScanConstants.announcePort, CultureInfo.InvariantCulture);
 
-        internal ConfigurationRequest(ConfigurationParams parameters, string queryId) : this()
-        {
-            if (parameters == null)
-            {
-                throw new ArgumentException("no configuration parameters given");
-            }
-
-            if (string.IsNullOrEmpty(queryId))
-            {
-                throw new ArgumentException("no query id given");
-            }
-
-            this.QueryId = queryId;
-            this.parameters = parameters;
-        }
-
-        private ConfigurationRequest() : base("configure")
+        public AnnounceReceiver()
+            : base(AnnounceAddress, AnnouncePort)
         {
         }
-
-        [DataMember(Name = "id")]
-        internal string QueryId { get; set; }
     }
 }

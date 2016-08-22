@@ -1,4 +1,4 @@
-﻿// <copyright file="ConfigurationSerializer.cs" company="Hottinger Baldwin Messtechnik GmbH">
+﻿// <copyright file="ResponseDeserializer.cs" company="Hottinger Baldwin Messtechnik GmbH">
 //
 // SharpScan, a library for scanning and configuring HBM devices.
 //
@@ -32,26 +32,44 @@ namespace Hbm.Devices.Scan.Configure
 {
     using System;
     using System.IO;
-    using System.Net.NetworkInformation;
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Json;
     using System.Text;
 
-    internal class ConfigurationSerializer
+    public class ResponseDeserializer
     {
-        private readonly DataContractJsonSerializer serializer;
+        private readonly DataContractJsonSerializer deserializer;
 
-        internal ConfigurationSerializer()
+        public ResponseDeserializer()
         {
-            this.serializer = new DataContractJsonSerializer(typeof(ConfigurationRequest));
+            this.deserializer = new DataContractJsonSerializer(typeof(JsonRpcResponse));
         }
 
-        internal string Serialize(ConfigurationRequest request)
+        public event EventHandler<JsonRpcResponseEventArgs> HandleMessage;
+
+        public void HandleEvent(object sender, MulticastMessageEventArgs args)
         {
-            using (MemoryStream ms = new MemoryStream())
+            if ((sender != null) && (this.HandleMessage != null) && (args != null))
             {
-                this.serializer.WriteObject(ms, request);
-                return Encoding.UTF8.GetString(ms.ToArray());
+                string jsonString = args.JsonString;
+  
+                if (!string.IsNullOrEmpty(jsonString))
+                {
+                    using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(jsonString)))
+                    {
+                        try
+                        {
+                            JsonRpcResponse response = (JsonRpcResponse)this.deserializer.ReadObject(ms);
+                            JsonRpcResponseEventArgs responseArgs = new JsonRpcResponseEventArgs();
+                            responseArgs.Response = response;
+                            this.HandleMessage(this, responseArgs);
+                        }
+                        catch (SerializationException)
+                        {
+                            return;
+                        }
+                    }
+                }
             }
         }
     }

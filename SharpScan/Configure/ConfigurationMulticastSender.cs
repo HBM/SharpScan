@@ -38,7 +38,7 @@ namespace Hbm.Devices.Scan.Configure
     using System.Net.Sockets;
     using System.Text;
 
-    public class ConfigurationMulticastSender : MulticastSender
+    public class ConfigurationMulticastSender : IMulticastSender
     {
         private static readonly string ConfigureAddress = Hbm.Devices.Scan.ScanConstants.configureAddress;
         private static readonly int ConfigurePort = int.Parse(Hbm.Devices.Scan.ScanConstants.configurePort, CultureInfo.InvariantCulture);
@@ -58,6 +58,8 @@ namespace Hbm.Devices.Scan.Configure
             IPAddress ip = IPAddress.Parse(ConfigureAddress);
             this.socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(ip));
             this.socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastTimeToLive, 1);
+            this.socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastLoopback, 0);
+
             IPEndPoint ipep = new IPEndPoint(ip, ConfigurePort);
             this.socket.Connect(ipep);
 
@@ -70,7 +72,8 @@ namespace Hbm.Devices.Scan.Configure
         {
             if (!this.closed)
             {
-                this.socket.Disconnect(false);
+                IPAddress ip = IPAddress.Parse(ConfigureAddress);
+                this.socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.DropMembership, new MulticastOption(ip));
                 this.socket.Close();
                 this.closed = true;
             }
@@ -107,6 +110,7 @@ namespace Hbm.Devices.Scan.Configure
                 }
 
                 this.socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastInterface, (int)IPAddress.HostToNetworkOrder(p.Index));
+                this.socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastLoopback, 0);
                 byte[] buffer = Encoding.UTF8.GetBytes(json);
                 this.socket.Send(buffer, buffer.Length, SocketFlags.None);
             }

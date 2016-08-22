@@ -69,6 +69,7 @@ namespace Hbm.Devices.Scan
                 IPEndPoint ipep = new IPEndPoint(IPAddress.Any, port);
                 s.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
                 s.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.PacketInformation, true);
+                s.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastLoopback, 0);
                 s.Bind(ipep);
 
                 this.socket = s;
@@ -203,7 +204,7 @@ namespace Hbm.Devices.Scan
                     if (this.HandleMessage != null)
                     {
                         this.eventArgs.IncomingInterface = incomingIF;
-                        this.eventArgs.AnnounceJson = message;
+                        this.eventArgs.JsonString = message;
                         this.HandleMessage(this, this.eventArgs);
                     }
                 }

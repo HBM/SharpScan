@@ -28,7 +28,7 @@
 //
 // </copyright>
 
-namespace Hbm.Devices.Scan
+namespace Hbm.Devices.Scan.Announcing
 {
     using NUnit.Framework;
 

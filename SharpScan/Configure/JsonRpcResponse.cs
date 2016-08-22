@@ -30,13 +30,25 @@
 
 namespace Hbm.Devices.Scan.Configure
 {
-    public abstract class JsonRpcResponse : JsonRpc
+    using System.Runtime.Serialization;
+
+    [DataContractAttribute]
+    public class JsonRpcResponse
     {
         private JsonRpcResponse()
-            : base("response")
         {
         }
 
+        [DataMember(Name = "jsonrpc")]
+        public string Version { get; private set; }
+
+        [DataMember(Name = "id")]
         public string Id { get; set; }
+
+        [DataMember(Name = "result")]
+        public string Result { get; set; }
+
+        [DataMember(Name = "error")]
+        public ErrorObject Error { get; set; }
     }
 }

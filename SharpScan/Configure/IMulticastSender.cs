@@ -1,4 +1,4 @@
-﻿// <copyright file="ConfigurationRequest.cs" company="Hottinger Baldwin Messtechnik GmbH">
+﻿// <copyright file="IMulticastSender.cs" company="Hottinger Baldwin Messtechnik GmbH">
 //
 // SharpScan, a library for scanning and configuring HBM devices.
 //
@@ -30,36 +30,12 @@
 
 namespace Hbm.Devices.Scan.Configure
 {
-    using System;
-    using System.Runtime.Serialization;
-
-    [DataContractAttribute]
-    internal class ConfigurationRequest : JsonRpc
+    internal interface IMulticastSender
     {
-        [DataMember(Name = "params")]
-        private ConfigurationParams parameters;
+        void SendMessage(string json);
 
-        internal ConfigurationRequest(ConfigurationParams parameters, string queryId) : this()
-        {
-            if (parameters == null)
-            {
-                throw new ArgumentException("no configuration parameters given");
-            }
+        void Close();
 
-            if (string.IsNullOrEmpty(queryId))
-            {
-                throw new ArgumentException("no query id given");
-            }
-
-            this.QueryId = queryId;
-            this.parameters = parameters;
-        }
-
-        private ConfigurationRequest() : base("configure")
-        {
-        }
-
-        [DataMember(Name = "id")]
-        internal string QueryId { get; set; }
+        bool IsClosed();
     }
 }

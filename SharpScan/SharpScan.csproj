@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Announcing\AnnouncedDevice.cs" />
-    <Compile Include="AnnounceReceiver.cs" />
+    <Compile Include="Announcing\AnnounceReceiver.cs" />
     <Compile Include="Announcing\Announce.cs" />
     <Compile Include="Announcing\AnnounceCache.cs" />
     <Compile Include="Announcing\AnnounceDeserializer.cs" />
@@ -64,12 +64,14 @@
     <Compile Include="Announcing\NewDeviceEventArgs.cs" />
     <Compile Include="Announcing\RemoveDeviceEventArgs.cs" />
     <Compile Include="Announcing\UpdateDeviceEventArgs.cs" />
-    <Compile Include="Configure\ConfigurationCallback.cs" />
+    <Compile Include="Configure\IConfigurationCallback.cs" />
     <Compile Include="Configure\ConfigurationDevice.cs" />
+    <Compile Include="Configure\ConfigurationMessageReceiver.cs" />
     <Compile Include="Configure\ConfigurationMulticastSender.cs" />
     <Compile Include="Configure\ConfigurationRequest.cs" />
     <Compile Include="Configure\ConfigurationSerializer.cs" />
     <Compile Include="Configure\ConfigurationService.cs" />
+    <Compile Include="Configure\ErrorObject.cs" />
     <Compile Include="Configure\JsonRpcResponseEventArgs.cs" />
     <Compile Include="Announcing\LRUCache.cs" />
     <Compile Include="Announcing\NetInterface.cs" />
@@ -81,7 +83,8 @@
     <Compile Include="Configure\ConfigurationParams.cs" />
     <Compile Include="Configure\JsonRpcResponse.cs" />
     <Compile Include="Configure\ManualInternetProtocolV4Address.cs" />
-    <Compile Include="Configure\MulticastSender.cs" />
+    <Compile Include="Configure\IMulticastSender.cs" />
+    <Compile Include="Configure\ResponseDeserializer.cs" />
     <Compile Include="JsonRpc.cs" />
     <Compile Include="MulticastMessageEventArgs.cs" />
     <Compile Include="MulticastMessageReceiver.cs" />

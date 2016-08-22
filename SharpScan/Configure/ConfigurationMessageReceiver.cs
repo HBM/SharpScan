@@ -1,4 +1,4 @@
-﻿// <copyright file="AnnounceReceiver.cs" company="Hottinger Baldwin Messtechnik GmbH">
+﻿// <copyright file="ConfigurationMessageReceiver.cs" company="Hottinger Baldwin Messtechnik GmbH">
 //
 // SharpScan, a library for scanning and configuring HBM devices.
 //
@@ -33,13 +33,13 @@ namespace Hbm.Devices.Scan
     using System;
     using System.Globalization;
 
-    public class AnnounceReceiver : MulticastMessageReceiver
+    public class ConfigurationMessageReceiver : MulticastMessageReceiver
     {
-        private static readonly string AnnounceAddress = Hbm.Devices.Scan.ScanConstants.announceAddress;
-        private static readonly int AnnouncePort = int.Parse(Hbm.Devices.Scan.ScanConstants.announcePort, CultureInfo.InvariantCulture);
+        private static readonly string ConfigureAddress = Hbm.Devices.Scan.ScanConstants.configureAddress;
+        private static readonly int ConfigurePort = int.Parse(Hbm.Devices.Scan.ScanConstants.configurePort, CultureInfo.InvariantCulture);
 
-        public AnnounceReceiver()
-            : base(AnnounceAddress, AnnouncePort)
+        public ConfigurationMessageReceiver()
+            : base(ConfigureAddress, ConfigurePort)
         {
         }
     }

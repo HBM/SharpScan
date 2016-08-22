@@ -1,4 +1,4 @@
-﻿// <copyright file="MulticastSender.cs" company="Hottinger Baldwin Messtechnik GmbH">
+﻿// <copyright file="ErrorObject.cs" company="Hottinger Baldwin Messtechnik GmbH">
 //
 // SharpScan, a library for scanning and configuring HBM devices.
 //
@@ -30,10 +30,22 @@
 
 namespace Hbm.Devices.Scan.Configure
 {
-    internal interface MulticastSender
+    using System.Runtime.Serialization;
+
+    [DataContractAttribute]
+    public class ErrorObject
     {
-        void SendMessage(string json);
-        void Close();
-        bool IsClosed();
+        private ErrorObject()
+        {
+        }
+
+        [DataMember(Name = "code")]
+        public int Code { get; set; }
+
+        [DataMember(Name = "message")]
+        public string Message { get; set; }
+
+        [DataMember(Name = "data")]
+        public string Data { get; set; }
     }
 }

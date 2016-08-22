@@ -80,12 +80,12 @@ namespace Hbm.Devices.Scan.Configure
         {
             get
             {
-                if (ConfigurationMethod == Method.Dhcp)
+                if (this.ConfigurationMethod == Method.Dhcp)
                 {
                     return "dhcp";
                 }
 
-                if (ConfigurationMethod == Method.Manual)
+                if (this.ConfigurationMethod == Method.Manual)
                 {
                     return "manual";
                 }
@@ -97,11 +97,11 @@ namespace Hbm.Devices.Scan.Configure
             {
                 if ("manual".Equals(value))
                 {
-                    ConfigurationMethod = Method.Manual;
+                    this.ConfigurationMethod = Method.Manual;
                 }
                 else if ("dhcp".Equals(value))
                 {
-                    ConfigurationMethod = Method.Dhcp;
+                    this.ConfigurationMethod = Method.Dhcp;
                 }
                 else
                 {

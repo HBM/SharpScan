@@ -33,25 +33,31 @@ namespace Hbm.Devices.Scan.Configure
     using System;
     using System.Collections.Generic;
     using System.Net.NetworkInformation;
+    using System.Timers;
 
     public class ConfigurationService
     {
         private ConfigurationSerializer serializer;
-        private MulticastSender sender;
+        private IMulticastSender sender;
+        private ResponseDeserializer parser;
+        private IDictionary<string, ConfigQuery> awaitingResponses;
 
-        public ConfigurationService(ICollection<NetworkInterface> adapters)
+        public ConfigurationService(ICollection<NetworkInterface> adapters, ResponseDeserializer parser)
         {
+            this.awaitingResponses = new Dictionary<string, ConfigQuery>();
             this.serializer = new ConfigurationSerializer();
             this.sender = new ConfigurationMulticastSender(adapters);
+            this.parser = parser;
+            parser.HandleMessage += this.HandleEvent;
         }
 
-        public void SendConfiguration(ConfigurationParams parameters, ConfigurationCallback callbacks, double timeoutMs)
+        public void SendConfiguration(ConfigurationParams parameters, IConfigurationCallback callbacks, double timeoutMs)
         {
             Guid queryId = System.Guid.NewGuid();
             this.SendConfiguration(parameters, queryId.ToString(), callbacks, timeoutMs);
         }
 
-        public void SendConfiguration(ConfigurationParams parameters, string queryId, ConfigurationCallback callbacks, double timeoutMs)
+        public void SendConfiguration(ConfigurationParams parameters, string queryId, IConfigurationCallback callbacks, double timeoutMs)
         {
             if (parameters == null)
             {
@@ -74,9 +80,93 @@ namespace Hbm.Devices.Scan.Configure
             }
 
             ConfigurationRequest request = new ConfigurationRequest(parameters, queryId);
-            //  TODO: arm timer
+            ConfigurationTimer timer = new ConfigurationTimer(timeoutMs, request);
+            ConfigQuery query = new ConfigQuery(request, callbacks, timer);
+            lock (this.awaitingResponses)
+            {
+                this.awaitingResponses.Add(queryId, query);
+                timer.AutoReset = false;
+                timer.Elapsed += new ElapsedEventHandler(this.OnTimedEvent);
+                timer.Start();
+            }
 
             this.sender.SendMessage(this.serializer.Serialize(request));
+        }
+
+        public void Close()
+        {
+            this.sender.Close();
+        }
+
+        private void OnTimedEvent(object sender, ElapsedEventArgs e)
+        {
+            ConfigurationTimer timer = (ConfigurationTimer)sender;
+            lock (this.awaitingResponses)
+            {
+                ConfigQuery query;
+                if (this.awaitingResponses.TryGetValue(timer.Request.QueryId, out query))
+                {
+                    this.awaitingResponses.Remove(timer.Request.QueryId);
+                    query.Callbacks.OnTimeout();
+                }
+            }
+        }
+
+        private void HandleEvent(object sender, JsonRpcResponseEventArgs args)
+        {
+            JsonRpcResponse response = args.Response;
+            if ((response.Result != null) || (response.Error != null))
+            {
+                string queryId = response.Id;
+                if (!string.IsNullOrEmpty(queryId))
+                {
+                    lock (this.awaitingResponses)
+                    {
+                        ConfigQuery query;
+                        if (this.awaitingResponses.TryGetValue(queryId, out query))
+                        {
+                            this.awaitingResponses.Remove(queryId);
+                            query.Timer.Stop();
+                        }
+
+                        if (response.Error != null)
+                        {
+                            query.Callbacks.OnError(response);
+                        }
+                        else if (response.Result != null)
+                        {
+                            query.Callbacks.OnSuccess(response);
+                        }
+                    }
+                }
+            }
+        }
+
+        internal class ConfigQuery
+        {
+            internal ConfigQuery(ConfigurationRequest request, IConfigurationCallback callbacks, ConfigurationTimer timer)
+            {
+                this.Request = request;
+                this.Callbacks = callbacks;
+                this.Timer = timer;
+            }
+
+            internal ConfigurationRequest Request { get; set; }
+
+            internal IConfigurationCallback Callbacks { get; set; }
+
+            internal ConfigurationTimer Timer { get; set; }
+        }
+
+        internal class ConfigurationTimer : Timer
+        {
+            internal ConfigurationTimer(double expire, ConfigurationRequest request)
+                : base(expire)
+            {
+                this.Request = request;
+            }
+
+            internal ConfigurationRequest Request { get; set; }
         }
     }
 }

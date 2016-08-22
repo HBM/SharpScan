@@ -60,7 +60,7 @@ namespace Hbm.Devices.Scan.Announcing
         {
             if ((sender != null) && (this.HandleMessage != null) && (args != null))
             {
-                string jsonString = args.AnnounceJson;
+                string jsonString = args.JsonString;
                 NetworkInterface incomingIF = args.IncomingInterface;
 
                 if (!string.IsNullOrEmpty(jsonString))

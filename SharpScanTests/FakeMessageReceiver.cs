@@ -169,7 +169,7 @@ namespace Hbm.Devices.Scan
         public void SendMessage(string json)
         {
             MulticastMessageEventArgs ev = new MulticastMessageEventArgs();
-            ev.AnnounceJson = json;
+            ev.JsonString = json;
             ev.IncomingInterface = incomingInterface;
             this.HandleMessage(this, ev);
         }

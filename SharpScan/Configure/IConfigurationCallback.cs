@@ -1,4 +1,4 @@
-﻿// <copyright file="ConfigurationCallback.cs" company="Hottinger Baldwin Messtechnik GmbH">
+﻿// <copyright file="IConfigurationCallback.cs" company="Hottinger Baldwin Messtechnik GmbH">
 //
 // SharpScan, a library for scanning and configuring HBM devices.
 //
@@ -30,10 +30,12 @@
 
 namespace Hbm.Devices.Scan.Configure
 {
-    public interface ConfigurationCallback
+    public interface IConfigurationCallback
     {
         void OnSuccess(JsonRpcResponse response);
+
         void OnError(JsonRpcResponse response);
-        void OnTimeout(double timeoutMs);
+
+        void OnTimeout();
     }
 }

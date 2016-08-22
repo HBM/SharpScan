@@ -29,16 +29,20 @@
 // </copyright>
 
 using System;
+using System.Threading;
 using Hbm.Devices.Scan;
 using Hbm.Devices.Scan.Configure;
 
-public class Sender : ConfigurationCallback
+public class Sender : IConfigurationCallback
 {
     private ConfigurationService service;
 
     private Sender()
     {
-        this.service = new ConfigurationService(new ScanInterfaces().NetworkInterfaces);
+        ConfigurationMessageReceiver receiver = new ConfigurationMessageReceiver();
+        ResponseDeserializer parser = new ResponseDeserializer();
+        receiver.HandleMessage += parser.HandleEvent;
+        this.service = new ConfigurationService(new ScanInterfaces().NetworkInterfaces, parser);
     }
 
     public static void Main(string[] args)
@@ -50,20 +54,22 @@ public class Sender : ConfigurationCallback
         // ConfigurationNetSettings settings = new ConfigurationNetSettings(new ConfigurationInterface("eth0", "10.1.2.3", "255.0.0.0", ConfigurationInterface.Method.Manual));
         ConfigurationParams parameters = new ConfigurationParams(device, settings);
         sender.service.SendConfiguration(parameters, sender, 1000);
+        Thread.Sleep(500000);
+        sender.service.Close();
     }
 
     public void OnError(JsonRpcResponse response)
     {
-        throw new NotImplementedException();
+        Console.WriteLine("Error");
     }
 
     public void OnSuccess(JsonRpcResponse response)
     {
-        throw new NotImplementedException();
+        Console.WriteLine("Success");
     }
 
-    public void OnTimeout(double timeoutMs)
+    public void OnTimeout()
     {
-        throw new NotImplementedException();
+        Console.WriteLine("Timeout");
     }
 }

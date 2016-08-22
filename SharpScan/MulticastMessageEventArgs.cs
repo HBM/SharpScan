@@ -34,7 +34,7 @@ namespace Hbm.Devices.Scan
 
     public class MulticastMessageEventArgs : System.EventArgs
     {
-        public string AnnounceJson { get; internal set; }
+        public string JsonString { get; internal set; }
 
         public NetworkInterface IncomingInterface { get; internal set; }
     }
