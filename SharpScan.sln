@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{7A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Receiver", "Examples\Receiver\Receiver.csproj", "{D5864930-534E-4F17-B368-EF16ABD72062}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sender", "Examples\ConfigureDevice\Sender.csproj", "{3A7ADA67-CBDD-423C-A4B2-F86CFC4C4EE2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sender", "Examples\Sender\Sender.csproj", "{3A7ADA67-CBDD-423C-A4B2-F86CFC4C4EE2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
