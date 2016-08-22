@@ -1,4 +1,4 @@
-﻿// <copyright file="ConfigurationSerializer.cs" company="Hottinger Baldwin Messtechnik GmbH">
+﻿// <copyright file="MulticastSender.cs" company="Hottinger Baldwin Messtechnik GmbH">
 //
 // SharpScan, a library for scanning and configuring HBM devices.
 //
@@ -30,29 +30,10 @@
 
 namespace Hbm.Devices.Scan.Configure
 {
-    using System;
-    using System.IO;
-    using System.Net.NetworkInformation;
-    using System.Runtime.Serialization;
-    using System.Runtime.Serialization.Json;
-    using System.Text;
-
-    internal class ConfigurationSerializer
+    internal interface MulticastSender
     {
-        private readonly DataContractJsonSerializer serializer;
-
-        internal ConfigurationSerializer()
-        {
-            this.serializer = new DataContractJsonSerializer(typeof(ConfigurationRequest));
-        }
-
-        internal string Serialize(ConfigurationRequest request)
-        {
-            using (MemoryStream ms = new MemoryStream())
-            {
-                serializer.WriteObject(ms, request);
-                return Encoding.UTF8.GetString(ms.ToArray());
-            }
-        }
+        void SendMessage(string json);
+        void Close();
+        bool IsClosed();
     }
 }

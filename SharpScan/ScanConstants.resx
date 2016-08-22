@@ -123,4 +123,10 @@
   <data name="announcePort" xml:space="preserve">
     <value>31416</value>
   </data>
+  <data name="configureAddress" xml:space="preserve">
+    <value>239.255.77.77</value>
+  </data>
+  <data name="configurePort" xml:space="preserve">
+    <value>31417</value>
+  </data>
 </root>

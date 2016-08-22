@@ -28,22 +28,21 @@
 //
 // </copyright>
 
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Hbm.Devices.Scan.Configure
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Net.NetworkInformation;
+
     public class ConfigurationService
     {
         private ConfigurationSerializer serializer;
+        private MulticastSender sender;
 
-        public ConfigurationService()
+        public ConfigurationService(ICollection<NetworkInterface> adapters)
         {
             this.serializer = new ConfigurationSerializer();
+            this.sender = new ConfigurationMulticastSender(adapters);
         }
 
         public void SendConfiguration(ConfigurationParams parameters, ConfigurationCallback callbacks, double timeoutMs)
@@ -77,7 +76,7 @@ namespace Hbm.Devices.Scan.Configure
             ConfigurationRequest request = new ConfigurationRequest(parameters, queryId);
             //  TODO: arm timer
 
-            serializer.SendConfiguration(request);
+            this.sender.SendMessage(this.serializer.Serialize(request));
         }
     }
 }

@@ -77,5 +77,23 @@ namespace Hbm.Devices.Scan {
                 return ResourceManager.GetString("announcePort", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die 239.255.77.77 ähnelt.
+        /// </summary>
+        internal static string configureAddress {
+            get {
+                return ResourceManager.GetString("configureAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die 31417 ähnelt.
+        /// </summary>
+        internal static string configurePort {
+            get {
+                return ResourceManager.GetString("configurePort", resourceCulture);
+            }
+        }
     }
 }

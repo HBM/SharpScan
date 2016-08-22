@@ -66,6 +66,7 @@
     <Compile Include="Announcing\UpdateDeviceEventArgs.cs" />
     <Compile Include="Configure\ConfigurationCallback.cs" />
     <Compile Include="Configure\ConfigurationDevice.cs" />
+    <Compile Include="Configure\ConfigurationMulticastSender.cs" />
     <Compile Include="Configure\ConfigurationRequest.cs" />
     <Compile Include="Configure\ConfigurationSerializer.cs" />
     <Compile Include="Configure\ConfigurationService.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Configure\ConfigurationParams.cs" />
     <Compile Include="Configure\JsonRpcResponse.cs" />
     <Compile Include="Configure\ManualInternetProtocolV4Address.cs" />
+    <Compile Include="Configure\MulticastSender.cs" />
     <Compile Include="JsonRpc.cs" />
     <Compile Include="MulticastMessageEventArgs.cs" />
     <Compile Include="MulticastMessageReceiver.cs" />
