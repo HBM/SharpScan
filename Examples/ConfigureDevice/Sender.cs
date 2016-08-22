@@ -1,4 +1,4 @@
-﻿// <copyright file="Device.cs" company="Hottinger Baldwin Messtechnik GmbH">
+﻿// <copyright file="Sender.cs" company="Hottinger Baldwin Messtechnik GmbH">
 //
 // SharpScan, a library for scanning and configuring HBM devices.
 //
@@ -28,19 +28,44 @@
 //
 // </copyright>
 
-namespace Hbm.Devices.Scan.Configure
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+using Hbm.Devices.Scan.Configure;
+
+public class Sender : ConfigurationCallback
 {
-    public class Device
+    private ConfigurationService service;
+
+    private Sender()
     {
-        internal Device()
-        {
-        }
+        this.service = new ConfigurationService();
+    }
 
-        internal Device(string uuid)
-        {
-            this.Uuid = uuid;
-        }
+    public static void Main(string[] args)
+    {
+        Sender sender = new Sender();
+        ConfigurationDevice device = new ConfigurationDevice("0009e5001231");
+        ConfigurationNetSettings settings = new ConfigurationNetSettings(new ConfigurationInterface("eth0", ConfigurationInterface.Method.Dhcp));
+        ConfigurationParams parameters = new ConfigurationParams(device, settings);
+        sender.service.SendConfiguration(parameters, sender, 1000);
+    }
 
-        public string Uuid { get; set; }
+    public void OnError(JsonRpcResponse response)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void OnSuccess(JsonRpcResponse response)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void OnTimeout(double timeoutMs)
+    {
+        throw new NotImplementedException();
     }
 }

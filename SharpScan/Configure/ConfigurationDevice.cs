@@ -1,4 +1,4 @@
-﻿// <copyright file="ManualInternetProtocolV4Address.cs" company="Hottinger Baldwin Messtechnik GmbH">
+﻿// <copyright file="ConfigurationDevice.cs" company="Hottinger Baldwin Messtechnik GmbH">
 //
 // SharpScan, a library for scanning and configuring HBM devices.
 //
@@ -30,15 +30,31 @@
 
 namespace Hbm.Devices.Scan.Configure
 {
+    using System;
     using System.Runtime.Serialization;
 
     [DataContractAttribute]
-    public class ManualInternetProtocolV4Address
+    public class ConfigurationDevice
     {
-        [DataMember(Name = "manualAddress")]
-        public string ManualAddress { get; set; }
+        [DataMember(Name = "uuid")]
+        private readonly string uuid;
 
-        [DataMember(Name = "manualNetmask")]
-        public string ManualNetMask { get; set; }
+        public ConfigurationDevice(string uuid)
+        {
+            if ((uuid == null) || (uuid.Length == 0))
+            {
+                throw new ArgumentException("emtpy or zero-length uuid string");
+            }
+
+            this.uuid = uuid;
+        }
+
+        public string Uuid
+        {
+            get
+            {
+                return this.uuid;
+            }
+        }
     }
 }

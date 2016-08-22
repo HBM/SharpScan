@@ -1,4 +1,4 @@
-﻿// <copyright file="ConfigParams.cs" company="Hottinger Baldwin Messtechnik GmbH">
+﻿// <copyright file="ConfigurationParams.cs" company="Hottinger Baldwin Messtechnik GmbH">
 //
 // SharpScan, a library for scanning and configuring HBM devices.
 //
@@ -30,19 +30,25 @@
 
 namespace Hbm.Devices.Scan.Configure
 {
-    internal class ConfigParams
+    using System.Runtime.Serialization;
+
+    [DataContractAttribute]
+    public class ConfigurationParams
     {
-        public ConfigParams(string uuid, ConfigNetSettings cns)
+        public ConfigurationParams(ConfigurationDevice device, ConfigurationNetSettings cns)
         {
-            this.Device = new Device(uuid);
+            this.Device = device;
             this.NetSettings = cns;
             this.Ttl = 1;
         }
 
-        public Device Device { get; set; }
+        [DataMember(Name = "device")]
+        public ConfigurationDevice Device { get; set; }
 
-        public ConfigNetSettings NetSettings { get; set; }
+        [DataMember(Name = "netSettings")]
+        public ConfigurationNetSettings NetSettings { get; set; }
 
+        [DataMember(Name = "ttl")]
         public int Ttl { get; set; }
     }
 }

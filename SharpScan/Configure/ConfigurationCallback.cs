@@ -1,4 +1,4 @@
-﻿// <copyright file="ConfigRequest.cs" company="Hottinger Baldwin Messtechnik GmbH">
+﻿// <copyright file="ConfigurationCallback.cs" company="Hottinger Baldwin Messtechnik GmbH">
 //
 // SharpScan, a library for scanning and configuring HBM devices.
 //
@@ -30,21 +30,10 @@
 
 namespace Hbm.Devices.Scan.Configure
 {
-    using System.Threading;
-
-    public class ConfigRequest : JsonRpc
+    public interface ConfigurationCallback
     {
-        private static int idCounter;
-
-        public ConfigRequest(string uuid, ConfigNetSettings configNetSettings)
-            : base("configure")
-        {
-            this.Id = Interlocked.Increment(ref idCounter);
-            this.ConfigParameters = new ConfigParams(uuid, configNetSettings);
-        }
-
-        public int Id { get; set; }
-
-        internal ConfigParams ConfigParameters { get; set; }
+        void OnSuccess(JsonRpcResponse response);
+        void OnError(JsonRpcResponse response);
+        void OnTimeout(double timeoutMs);
     }
 }

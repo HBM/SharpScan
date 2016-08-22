@@ -1,4 +1,4 @@
-﻿// <copyright file="ConfigInterface.cs" company="Hottinger Baldwin Messtechnik GmbH">
+﻿// <copyright file="ConfigurationNetSettings.cs" company="Hottinger Baldwin Messtechnik GmbH">
 //
 // SharpScan, a library for scanning and configuring HBM devices.
 //
@@ -30,37 +30,30 @@
 
 namespace Hbm.Devices.Scan.Configure
 {
-    public class ConfigInterface
+    using System.Runtime.Serialization;
+    using Announcing;
+
+    [DataContractAttribute]
+    public class ConfigurationNetSettings
     {
-        public ConfigInterface(string configurationInterface, string address, string mask)
-            : this(configurationInterface)
+        public ConfigurationNetSettings(ConfigurationInterface configurationInterface) : this(configurationInterface, null)
         {
-            this.InternetProtocolV4 = new ManualInternetProtocolV4Address();
-            this.InternetProtocolV4.ManualAddress = address;
-            this.InternetProtocolV4.ManualNetMask = mask;
         }
 
-        public ConfigInterface(string configurationInterface, string mode)
-            : this(configurationInterface)
+        public ConfigurationNetSettings(DefaultGateway gateway) : this(null, gateway)
         {
-            this.ConfigurationMethod = mode;
         }
 
-        public ConfigInterface(string configurationInterface, string address, string mask, string mode)
-            : this(configurationInterface, address, mask)
+        public ConfigurationNetSettings(ConfigurationInterface configurationInterface, DefaultGateway gateway)
         {
-            this.ConfigurationMethod = mode;
+            this.ConfigurationInterface = configurationInterface;
+            DefaultGateway = gateway;
         }
 
-        private ConfigInterface(string iface)
-        {
-            this.Name = iface;
-        }
+        [DataMember(Name = "interface")]
+        public ConfigurationInterface ConfigurationInterface { get; set; }
 
-        public string Name { get; set; }
-
-        public ManualInternetProtocolV4Address InternetProtocolV4 { get; set; }
-
-        public string ConfigurationMethod { get; set; }
+        [DataMember(Name = "defaultGateway", EmitDefaultValue = false)]
+        public DefaultGateway DefaultGateway { get; set; }
     }
 }

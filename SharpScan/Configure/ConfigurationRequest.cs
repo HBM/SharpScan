@@ -1,4 +1,4 @@
-﻿// <copyright file="ConfigNetSettings.cs" company="Hottinger Baldwin Messtechnik GmbH">
+﻿// <copyright file="ConfigurationRequest.cs" company="Hottinger Baldwin Messtechnik GmbH">
 //
 // SharpScan, a library for scanning and configuring HBM devices.
 //
@@ -30,26 +30,36 @@
 
 namespace Hbm.Devices.Scan.Configure
 {
-    using Hbm.Devices.Scan.Announcing;
+    using System;
+    using System.Runtime.Serialization;
 
-    public class ConfigNetSettings
+    [DataContractAttribute]
+    internal class ConfigurationRequest : JsonRpc
     {
-        public ConfigNetSettings(ConfigInterface configurationInterface) : this(configurationInterface, null)
+        [DataMember(Name = "id")]
+        private string queryId;
+
+        [DataMember(Name = "params")]
+        private ConfigurationParams parameters;
+
+        internal ConfigurationRequest(ConfigurationParams parameters, string queryId) : this()
         {
+            if (parameters == null)
+            {
+                throw new ArgumentException("no configuration parameters given");
+            }
+
+            if (string.IsNullOrEmpty(queryId))
+            {
+                throw new ArgumentException("no query id given");
+            }
+
+            this.queryId = queryId;
+            this.parameters = parameters;
         }
 
-        public ConfigNetSettings(DefaultGateway gateway) : this(null, gateway)
+        private ConfigurationRequest() : base("configure")
         {
         }
-
-        public ConfigNetSettings(ConfigInterface configurationInterface, DefaultGateway gateway)
-        {
-            this.ConfigurationInterface = configurationInterface;
-            DefaultGateway = gateway;
-        }
-
-        public ConfigInterface ConfigurationInterface { get; set; }
-
-        public DefaultGateway DefaultGateway { get; set; }
     }
 }
