@@ -95,6 +95,18 @@ namespace Hbm.Devices.Scan.Configure
 
         public void Close()
         {
+            this.parser.HandleMessage -= this.HandleEvent;
+            lock (this.awaitingResponses)
+            {
+                foreach (KeyValuePair<string, ConfigQuery> entry in this.awaitingResponses)
+                {
+                    ConfigurationTimer timer = entry.Value.Timer;
+                    timer.Stop();
+                }
+
+                this.awaitingResponses.Clear();
+            }
+
             this.sender.Close();
         }
 
