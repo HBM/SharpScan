@@ -36,65 +36,70 @@ namespace Hbm.Devices.Scan
     using NUnit.Framework;
 
     [TestFixture]
-    class InterfaceMatcherTest
+    internal class InterfaceMatcherTest
     {
         private Announce filteredAnnounce;
         private Announce announce;
         private FakeMessageReceiver fmr;
         private InterfaceMatcher matcher;
-        AnnounceFilter filter;
+        private AnnounceFilter filter;
 
         [SetUp]
-        public void setup()
+        public void Setup()
         {
             ScanInterfaces scanInterfaces = new ScanInterfaces();
-            matcher = new InterfaceMatcher(scanInterfaces.NetworkInterfaces);
-            filteredAnnounce = null;
-            fmr = new FakeMessageReceiver();
+            this.matcher = new InterfaceMatcher(scanInterfaces.NetworkInterfaces);
+            this.filteredAnnounce = null;
+            this.fmr = new FakeMessageReceiver();
             AnnounceDeserializer parser = new AnnounceDeserializer();
-            fmr.HandleMessage += parser.HandleEvent;
-            filter = new AnnounceFilter(matcher);
-            parser.HandleMessage += filter.HandleEvent;
+            this.fmr.HandleMessage += parser.HandleEvent;
+            this.filter = new AnnounceFilter(this.matcher);
+            parser.HandleMessage += this.filter.HandleEvent;
             parser.HandleMessage += this.HandleAnnounceEvent;
-            filter.HandleMessage += this.HandleFilteredEvent;
+            this.filter.HandleMessage += this.HandleFilteredEvent;
         }
 
         [Test]
         public void FilterCorrectMessageTest()
         {
-            fmr.EmitSingleCorrectMessage();
-            Assert.NotNull(filteredAnnounce, "Didn't got an Announce object");
+            this.fmr.EmitSingleCorrectMessage();
+            Assert.NotNull(this.filteredAnnounce, "Didn't got an Announce object");
         }
 
         [Test]
         public void WrongArgumentsTest()
         {
+            // coverity[var_deref_model]
             Assert.Throws<ArgumentNullException>(() => new InterfaceMatcher(null));
-            Assert.Throws<ArgumentNullException>(() => matcher.AddInterface(null));
-            Assert.Throws<ArgumentNullException>(() => matcher.RemoveInterface(null));
+
+            // coverity[var_deref_model]
+            Assert.Throws<ArgumentNullException>(() => this.matcher.AddInterface(null));
+
+            // coverity[var_deref_model]
+            Assert.Throws<ArgumentNullException>(() => this.matcher.RemoveInterface(null));
         }
 
         [Test]
         public void FilterWrongInterfaceTest()
         {
-            matcher.RemoveInterface(fmr.IncomingInterface);
-            fmr.EmitSingleCorrectMessage();
-            Assert.NotNull(announce, "No announce parsed");
-            Assert.Null(filteredAnnounce, "Got Announce object despite wrong incoming interface");
+            this.matcher.RemoveInterface(this.fmr.IncomingInterface);
+            this.fmr.EmitSingleCorrectMessage();
+            Assert.NotNull(this.announce, "No announce parsed");
+            Assert.Null(this.filteredAnnounce, "Got Announce object despite wrong incoming interface");
 
-            matcher.AddInterface(fmr.IncomingInterface);
-            fmr.EmitSingleCorrectMessage();
-            Assert.NotNull(filteredAnnounce, "Didn't got an Announce object");
+            this.matcher.AddInterface(this.fmr.IncomingInterface);
+            this.fmr.EmitSingleCorrectMessage();
+            Assert.NotNull(this.filteredAnnounce, "Didn't got an Announce object");
         }
 
         private void HandleFilteredEvent(object sender, AnnounceEventArgs args)
         {
-            filteredAnnounce = args.Announce;
+            this.filteredAnnounce = args.Announce;
         }
 
         private void HandleAnnounceEvent(object sender, AnnounceEventArgs args)
         {
-            announce = args.Announce;
+            this.announce = args.Announce;
         }
     }
 }
