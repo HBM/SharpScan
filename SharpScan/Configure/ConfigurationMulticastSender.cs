@@ -70,18 +70,24 @@ namespace Hbm.Devices.Scan.Configure
 
         public void Close()
         {
-            if (!this.closed)
+            lock (this)
             {
-                IPAddress ip = IPAddress.Parse(ConfigureAddress);
-                this.socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.DropMembership, new MulticastOption(ip));
-                this.socket.Close();
-                this.closed = true;
+                if (!this.closed)
+                {
+                    IPAddress ip = IPAddress.Parse(ConfigureAddress);
+                    this.socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.DropMembership, new MulticastOption(ip));
+                    this.socket.Close();
+                    this.closed = true;
+                }
             }
         }
 
         public bool IsClosed()
         {
-            return this.closed;
+            lock (this)
+            {
+                return this.closed;
+            }
         }
 
         public void SendMessage(string json)
