@@ -121,6 +121,11 @@ namespace Hbm.Devices.Scan
             }
         }
 
+        public void Close()
+        {
+            this.socket.Close();
+        }
+
         private static NetworkInterface GetInterface(int index)
         {
             NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
