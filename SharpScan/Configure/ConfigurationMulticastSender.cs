@@ -38,7 +38,7 @@ namespace Hbm.Devices.Scan.Configure
     using System.Net.Sockets;
     using System.Text;
 
-    public class ConfigurationMulticastSender : IMulticastSender
+    public class ConfigurationMulticastSender : IMulticastSender, IDisposable
     {
         private static readonly string ConfigureAddress = Hbm.Devices.Scan.ScanConstants.configureAddress;
         private static readonly int ConfigurePort = int.Parse(Hbm.Devices.Scan.ScanConstants.configurePort, CultureInfo.InvariantCulture);
@@ -113,6 +113,20 @@ namespace Hbm.Devices.Scan.Configure
                 this.socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastLoopback, 0);
                 byte[] buffer = Encoding.UTF8.GetBytes(json);
                 this.socket.Send(buffer, buffer.Length, SocketFlags.None);
+            }
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.socket.Close();
             }
         }
     }
