@@ -38,7 +38,7 @@ using System.Net.Sockets;
 
 namespace Hbm.Devices.Scan
 {
-    public class MulticastMessageReceiver
+    public class MulticastMessageReceiver : IDisposable
     {
         private readonly Socket socket;
         private readonly IPAddress multicastIP;
@@ -61,18 +61,17 @@ namespace Hbm.Devices.Scan
             this.interfaceMap = new Dictionary<int, NetworkInterface>();
             this.multicastInterfaces = new List<IPAddress>();
 
-            Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            this.socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             this.eventArgs = new MulticastMessageEventArgs();
             try
             {
-                s.ReceiveBufferSize = 128000;
+                this.socket.ReceiveBufferSize = 128000;
                 IPEndPoint ipep = new IPEndPoint(IPAddress.Any, port);
-                s.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
-                s.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.PacketInformation, true);
-                s.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastLoopback, 0);
-                s.Bind(ipep);
+                this.socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
+                this.socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.PacketInformation, true);
+                this.socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastLoopback, 0);
+                this.socket.Bind(ipep);
 
-                this.socket = s;
                 this.receiveBuffer = new byte[65536];
                 IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
                 this.endPoint = (EndPoint)sender;
@@ -81,7 +80,7 @@ namespace Hbm.Devices.Scan
 
                 this.AddMulticastMembership();
 
-                s.BeginReceiveMessageFrom(
+                this.socket.BeginReceiveMessageFrom(
                     this.receiveBuffer,
                     0,
                     this.receiveBuffer.Length,
@@ -92,7 +91,7 @@ namespace Hbm.Devices.Scan
             }
             catch
             {
-                s.Dispose();
+                this.socket.Dispose();
                 throw;
             }
         }
@@ -107,6 +106,20 @@ namespace Hbm.Devices.Scan
         }
 
         public event EventHandler<MulticastMessageEventArgs> HandleMessage;
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.socket.Close();
+            }
+        }
 
         private static NetworkInterface GetInterface(int index)
         {
