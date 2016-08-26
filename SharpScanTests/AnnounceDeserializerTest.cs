@@ -39,13 +39,14 @@ namespace Hbm.Devices.Scan
     {
         private Announce announce;
         private FakeMessageReceiver fmr;
+        private AnnounceDeserializer parser;
 
         [SetUp]
         public void setup()
         {
             announce = null;
             fmr = new FakeMessageReceiver();
-            AnnounceDeserializer parser = new AnnounceDeserializer();
+            this.parser = new AnnounceDeserializer();
             fmr.HandleMessage += parser.HandleEvent;
             parser.HandleMessage += this.HandleEvent;
         }
@@ -186,6 +187,12 @@ namespace Hbm.Devices.Scan
             Assert.NotNull(announce, "No Announce object after correct message");
             Assert.True(a.Equals(announce), "Same announces are not equal");
             Assert.False(a.Equals(null), "announce equals null");
+        }
+
+        [Test]
+        public void HandleEventParameterChecking()
+        {
+            Assert.DoesNotThrow(delegate { parser.HandleEvent(null, null); }, "HandleEvent doesn't handle errors correctly", "null");
         }
 
         [Test]

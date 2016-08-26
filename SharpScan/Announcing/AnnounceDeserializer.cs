@@ -58,7 +58,7 @@ namespace Hbm.Devices.Scan.Announcing
 
         public void HandleEvent(object sender, MulticastMessageEventArgs args)
         {
-            if ((sender != null) && (this.HandleMessage != null) && (args != null))
+            if ((this.HandleMessage != null) && (args != null))
             {
                 string jsonString = args.JsonString;
                 NetworkInterface incomingIF = args.IncomingInterface;
