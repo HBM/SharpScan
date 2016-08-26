@@ -129,6 +129,21 @@ namespace SharpScanTests {
         ///&quot;ipv4&quot;:[{&quot;address&quot;:&quot;172.19.192.57&quot;,&quot;netmask&quot;:&quot;255.255.0.0&quot;}],
         ///&quot;ipv6&quot;:[{&quot;address&quot;:&quot;fe80::209:e5ff:fe00:123a&quot;,&quot;prefix&quot;:64 [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
         /// </summary>
+        internal static string CorrectMessageNoServices {
+            get {
+                return ResourceManager.GetString("CorrectMessageNoServices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die {&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;announce&quot;,&quot;params&quot;:{&quot;apiVersion&quot;:&quot;1.0&quot;,
+        ///&quot;device&quot;:{&quot;familyType&quot;:&quot;QuantumX&quot;,&quot;firmwareVersion&quot;:&quot;4.1.1.18610.1&quot;,&quot;hardwareId&quot;:&quot;MX410_R0&quot;,
+        ///&quot;name&quot;:&quot;MX410 Matthias&quot;,&quot;type&quot;:&quot;MX410&quot;,&quot;uuid&quot;:&quot;0009E500123A&quot;},&quot;expiration&quot;:1,
+        ///&quot;netSettings&quot;:{&quot;defaultGateway&quot;:{&quot;ipv4Address&quot;:&quot;172.19.169.254&quot;},
+        ///&quot;interface&quot;:{&quot;configurationMethod&quot;:&quot;dhcp&quot;,&quot;description&quot;:&quot;ethernet backplane side&quot;,
+        ///&quot;ipv4&quot;:[{&quot;address&quot;:&quot;172.19.192.57&quot;,&quot;netmask&quot;:&quot;255.255.0.0&quot;}],
+        ///&quot;ipv6&quot;:[{&quot;address&quot;:&quot;fe80::209:e5ff:fe00:123a&quot;,&quot;prefix&quot;:64 [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
+        /// </summary>
         internal static string CorrectMessageShortExpire {
             get {
                 return ResourceManager.GetString("CorrectMessageShortExpire", resourceCulture);

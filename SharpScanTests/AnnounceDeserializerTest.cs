@@ -185,6 +185,14 @@ namespace Hbm.Devices.Scan
         }
 
         [Test]
+        public void ParseMissingSevicesMessage()
+        {
+            fmr.EmitMessageNoServices();
+            Assert.NotNull(announce.Parameters.Services, "Service list must not be null");
+            Assert.AreEqual(0, announce.Parameters.Services.Count, "Service list not empty");
+        }
+
+        [Test]
         public void AnnounceEqualsTest()
         {
             fmr.EmitSingleCorrectMessage();
