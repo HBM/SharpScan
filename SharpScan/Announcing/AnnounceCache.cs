@@ -75,6 +75,11 @@ namespace Hbm.Devices.Scan.Announcing
             return this.parsedMessages.Count;
         }
 
+        internal int Capacity()
+        {
+            return this.parsedMessages.Capacity;
+        }
+
         internal int LastAnnounceSize()
         {
             return this.lastDeviceAnnounceString.Count;

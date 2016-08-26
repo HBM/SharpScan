@@ -90,6 +90,13 @@ namespace Hbm.Devices.Scan
             Assert.NotNull(parser.GetCache().Get(SharpScanTests.FakeMessages.CorretMessageDifferentServices), "New message not in cache");
         }
 
+        [Test]
+        public void CreateCacheDefaultSize()
+        {
+            AnnounceCache cache = new AnnounceCache();
+            Assert.AreEqual(cache.Capacity(), AnnounceCache.DefaultCacheSize, "announce cache size is not default");
+        }
+
         private void HandleEvent(object sender, AnnounceEventArgs args)
         {
         }
