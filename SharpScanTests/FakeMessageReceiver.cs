@@ -166,6 +166,11 @@ namespace Hbm.Devices.Scan
             SendMessage(SharpScanTests.FakeMessages.MissingFamilytypeMessage);
         }
 
+        public void EmitNoJsonRpcMessage()
+        {
+            SendMessage(SharpScanTests.FakeMessages.NoJsonRpc);
+        }
+
         public void SendMessage(string json)
         {
             MulticastMessageEventArgs ev = new MulticastMessageEventArgs();

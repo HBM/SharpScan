@@ -72,6 +72,13 @@ namespace Hbm.Devices.Scan
         }
 
         [Test]
+        public void ParseNoJsonRpcMessage()
+        {
+            fmr.EmitNoJsonRpcMessage();
+            Assert.Null(announce, "Got Announce object from message with method that's not JsonRpc");
+        }
+
+        [Test]
         public void ParseEmptyMessage()
         {
             fmr.EmitEmptyString();

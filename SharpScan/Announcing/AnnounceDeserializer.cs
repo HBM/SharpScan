@@ -104,11 +104,6 @@ namespace Hbm.Devices.Scan.Announcing
 
         private static bool MandatoryKeysPresent(Announce announce)
         {
-            if (announce == null)
-            {
-                return false;
-            }
-
             return KeysInAnnounceParamsPresent(announce.Parameters);
         }
 

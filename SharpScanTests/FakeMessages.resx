@@ -300,4 +300,7 @@
 "services":[{"port":7411,"type":"daqStream"},{"port":8080,"type":"daqStreamWS"},{"port":5001,"type":"hbmProtocol"},
 {"port":80,"type":"http"},{"port":11122,"type":"jetd"},{"port":11123,"type":"jetws"},{"port":22,"type":"ssh"}]}}</value>
   </data>
+  <data name="NoJsonRpc" xml:space="preserve">
+    <value>[]</value>
+  </data>
 </root>

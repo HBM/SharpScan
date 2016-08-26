@@ -304,6 +304,15 @@ namespace SharpScanTests {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die [] ähnelt.
+        /// </summary>
+        internal static string NoJsonRpc {
+            get {
+                return ResourceManager.GetString("NoJsonRpc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die {&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;announce&quot;,
         ///&quot;params&quot;:{&quot;apiVersion&quot;:&quot;1.0&quot;,&quot;device&quot;:{&quot;familyType&quot;:&quot;QuantumX&quot;,&quot;firmwareVersion&quot;:&quot;4.1.1.18610.1&quot;,
         ///&quot;hardwareId&quot;:&quot;MX410_R0&quot;,&quot;name&quot;:&quot;MX410 Matthias&quot;,&quot;type&quot;:&quot;MX410&quot;,&quot;uuid&quot;:&quot;0009E500123A&quot;},&quot;expiration&quot;:15}} ähnelt.
