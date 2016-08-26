@@ -55,8 +55,9 @@ namespace Hbm.Devices.Scan.Configure
             this.parameters = parameters;
         }
 
-        private ConfigurationRequest() : base("configure")
+        private ConfigurationRequest()
         {
+            this.Method = "configure";
         }
 
         [DataMember(Name = "id")]

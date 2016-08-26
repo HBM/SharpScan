@@ -37,11 +37,6 @@ namespace Hbm.Devices.Scan.Announcing
     [DataContractAttribute]
     public class Announce : JsonRpc
     {
-        private Announce()
-            : base("announce")
-        {
-        }
-
         [DataMember(Name = "params")]
         public AnnounceParameters Parameters { get; private set; }
 

@@ -36,17 +36,16 @@ namespace Hbm.Devices.Scan
     [DataContractAttribute]
     public abstract class JsonRpc
     {
-        protected JsonRpc(string method)
+        protected JsonRpc()
         {
             this.Version = "2.0";
-            this.Method = method;
         }
 
         [DataMember(Name = "jsonrpc")]
         public string Version { get; private set; }
 
         [DataMember(Name = "method")]
-        public string Method { get; private set; }
+        public string Method { get; internal set; }
 
         public string JsonString { get; internal set; }
 
