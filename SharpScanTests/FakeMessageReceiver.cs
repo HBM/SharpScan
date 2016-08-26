@@ -161,6 +161,11 @@ namespace Hbm.Devices.Scan
             SendMessage(SharpScanTests.FakeMessages.WrongVersionMessage);
         }
 
+        public void EmitMessageNoExpire()
+        {
+            SendMessage(SharpScanTests.FakeMessages.CorrectMessageNoExpire);
+        }
+
         public void EmitMissingFamilytypeMessage()
         {
             SendMessage(SharpScanTests.FakeMessages.MissingFamilytypeMessage);

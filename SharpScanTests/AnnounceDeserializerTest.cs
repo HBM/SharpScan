@@ -178,6 +178,13 @@ namespace Hbm.Devices.Scan
         }
 
         [Test]
+        public void ParseMissingExpireMessage()
+        {
+            fmr.EmitMessageNoExpire();
+            Assert.AreNotEqual(0, announce.Parameters.Expiration, "expirration not set to a meaningful value");
+        }
+
+        [Test]
         public void AnnounceEqualsTest()
         {
             fmr.EmitSingleCorrectMessage();
@@ -252,7 +259,7 @@ namespace Hbm.Devices.Scan
             Assert.AreEqual(announce.Parameters.Device.DeviceType, type, "Device type not correct");
             Assert.AreEqual(announce.Parameters.Device.Uuid, uuid, "Device uuid not correct");
             Assert.AreEqual(announce.Parameters.Device.IsRouter, isRouter, "Device isRouter not correct");
-            Assert.AreEqual(announce.Parameters.Expiration, expiration, "Expiration not correct");
+            Assert.AreEqual(expiration, announce.Parameters.Expiration, "Expiration not correct");
             Assert.AreEqual(announce.Parameters.NetSettings.DefaultGateway.InternetProtocolV4Address, defaultGwIPv4, "Default gateway IPv4 address not correct");
             Assert.AreEqual(announce.Parameters.NetSettings.DefaultGateway.InternetProtocolV6Address, defaultGwIPv6, "Default gateway IPv6 address not correct");
             Assert.AreEqual(announce.Parameters.NetSettings.Interface.ConfigurationMethod, configurationMethod, "Configuration method not correct");

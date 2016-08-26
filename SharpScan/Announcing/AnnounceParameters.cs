@@ -39,7 +39,7 @@ namespace Hbm.Devices.Scan.Announcing
     {
 #pragma warning disable 0649
         [DataMember(Name = "expiration")]
-        private readonly int expiration = 20;
+        private int expiration;
 
         [DataMember(Name = "apiVersion")]
 
@@ -111,6 +111,12 @@ namespace Hbm.Devices.Scan.Announcing
             {
                 return this.netSettings;
             }
+        }
+
+        [OnDeserialized]
+        void OnDeserialized(StreamingContext c)
+        {
+            expiration = (expiration == 0) ? 20 : expiration;
         }
     }
 }
