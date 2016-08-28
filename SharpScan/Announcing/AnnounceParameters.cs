@@ -116,7 +116,14 @@ namespace Hbm.Devices.Scan.Announcing
         [OnDeserialized]
         void OnDeserialized(StreamingContext c)
         {
-            expiration = (expiration == 0) ? 20 : expiration;
+            /*
+             * Ensure that we always have an expiration time greater zero.
+             * Later handling of Announce objects (i.e. DeviceMonitor) can rely on a valid expiration time.
+             */
+            if (expiration <= 0)
+            {
+                expiration = 20;
+            }
         }
     }
 }

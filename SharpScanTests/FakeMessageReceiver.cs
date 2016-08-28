@@ -166,6 +166,11 @@ namespace Hbm.Devices.Scan
             SendMessage(SharpScanTests.FakeMessages.CorrectMessageNoExpire);
         }
 
+        public void EmitMessageNegativeExpire()
+        {
+            SendMessage(SharpScanTests.FakeMessages.CorrectMessageNegativeExpire);
+        }
+
         public void EmitMessageNoServices()
         {
             SendMessage(SharpScanTests.FakeMessages.CorrectMessageNoServices);

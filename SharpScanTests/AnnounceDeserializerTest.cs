@@ -181,7 +181,14 @@ namespace Hbm.Devices.Scan
         public void ParseMissingExpireMessage()
         {
             fmr.EmitMessageNoExpire();
-            Assert.AreNotEqual(0, announce.Parameters.Expiration, "expirration not set to a meaningful value");
+            Assert.AreNotEqual(0, announce.Parameters.Expiration, "expiration not set to a meaningful value");
+        }
+
+        [Test]
+        public void ParseNegativeExpireMessage()
+        {
+            fmr.EmitMessageNegativeExpire();
+            Assert.Greater(announce.Parameters.Expiration, 0, "negative expiration not allowed");
         }
 
         [Test]
