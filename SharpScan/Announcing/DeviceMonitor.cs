@@ -138,13 +138,7 @@ namespace Hbm.Devices.Scan.Announcing
 
         private int GetExpirationMilliSeconds(Announce announce)
         {
-            int expiration = announce.Parameters.Expiration;
-            if (expiration == 0)
-            {
-                expiration = 6;
-            }
-
-            return expiration * 1000;
+            return announce.Parameters.Expiration * 1000;
         }
 
         private void OnTimedEvent(object source, ElapsedEventArgs e)
