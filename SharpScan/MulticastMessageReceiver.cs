@@ -101,7 +101,7 @@ namespace Hbm.Devices.Scan
             NetworkChange.NetworkAddressChanged -= this.AddressChangedCallback;
             if (this.socket != null)
             {
-                this.socket.Close();
+                Close();
             }
         }
 
@@ -117,12 +117,13 @@ namespace Hbm.Devices.Scan
         {
             if (disposing)
             {
-                this.socket.Close();
+                Close();
             }
         }
 
         public void Close()
         {
+            DropMulticastMembership();
             this.socket.Close();
         }
 
