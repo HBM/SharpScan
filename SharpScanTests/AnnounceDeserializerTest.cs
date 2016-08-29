@@ -188,7 +188,7 @@ namespace Hbm.Devices.Scan
         public void ParseNegativeExpireMessage()
         {
             fmr.EmitMessageNegativeExpire();
-            Assert.Greater(announce.Parameters.Expiration, 0, "negative expiration not allowed");
+            Assert.Null(announce, "Got announce form message with negative expiration");
         }
 
         [Test]
