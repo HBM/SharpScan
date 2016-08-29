@@ -42,7 +42,8 @@ public class Sender : IConfigurationCallback
         ConfigurationMessageReceiver receiver = new ConfigurationMessageReceiver();
         ResponseDeserializer parser = new ResponseDeserializer();
         receiver.HandleMessage += parser.HandleEvent;
-        this.service = new ConfigurationService(new ScanInterfaces().NetworkInterfaces, parser);
+        IMulticastSender sender = new ConfigurationMulticastSender(new ScanInterfaces().NetworkInterfaces);
+        this.service = new ConfigurationService(parser, sender);
     }
 
     public static void Main(string[] args)

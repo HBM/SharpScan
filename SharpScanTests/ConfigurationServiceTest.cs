@@ -1,4 +1,4 @@
-﻿// <copyright file="IMulticastSender.cs" company="Hottinger Baldwin Messtechnik GmbH">
+﻿// <copyright file="ConfigurationServiceTest.cs" company="Hottinger Baldwin Messtechnik GmbH">
 //
 // SharpScan, a library for scanning and configuring HBM devices.
 //
@@ -30,12 +30,30 @@
 
 namespace Hbm.Devices.Scan.Configure
 {
-    public interface IMulticastSender
+    using NUnit.Framework;
+
+    [TestFixture]
+    internal class ConfigurationServiceTest
     {
-        void SendMessage(string json);
+        [Test]
+        public void ServiceInstantiationAndClose()
+        {
+            Assert.DoesNotThrow(delegate 
+            {
+                ConfigurationMessageReceiver receiver = new ConfigurationMessageReceiver();
+                ResponseDeserializer parser = new ResponseDeserializer();
+                receiver.HandleMessage += parser.HandleEvent;
+                IMulticastSender sender = new ConfigurationMulticastSender(new ScanInterfaces().NetworkInterfaces);
+                ConfigurationService service = new ConfigurationService(parser, sender);
+                service.Close();
+            }, "instantiation and closing of ConfigurationService threw exception", "null");
 
-        void Close();
+        }
 
-        bool IsClosed();
+        [Test]
+        public void SendConfigurationTest()
+        {
+
+        }
     }
 }

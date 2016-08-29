@@ -31,6 +31,7 @@
 namespace Hbm.Devices.Scan
 {
     using System.Collections.Generic;
+    using System.Globalization;
     using Announcing;
     using NUnit.Framework;
 
@@ -181,7 +182,7 @@ namespace Hbm.Devices.Scan
         public void ParseMissingExpireMessage()
         {
             fmr.EmitMessageNoExpire();
-            Assert.AreNotEqual(0, announce.Parameters.Expiration, "expiration not set to a meaningful value");
+            Assert.AreEqual(int.Parse(ScanConstants.defaultExpirationInSeconds, CultureInfo.InvariantCulture), announce.Parameters.Expiration, "expiration not set to a meaningful value");
         }
 
         [Test]

@@ -42,11 +42,11 @@ namespace Hbm.Devices.Scan.Configure
         private ResponseDeserializer parser;
         private IDictionary<string, ConfigQuery> awaitingResponses;
 
-        public ConfigurationService(ICollection<NetworkInterface> adapters, ResponseDeserializer parser)
+        public ConfigurationService(ResponseDeserializer parser, IMulticastSender sender)
         {
             this.awaitingResponses = new Dictionary<string, ConfigQuery>();
             this.serializer = new ConfigurationSerializer();
-            this.sender = new ConfigurationMulticastSender(adapters);
+            this.sender = sender;
             this.parser = parser;
             parser.HandleMessage += this.HandleEvent;
         }
