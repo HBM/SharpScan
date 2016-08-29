@@ -88,6 +88,22 @@ namespace Hbm.Devices.Scan.Configure
             Assert.Null(filteredAnnounce, "Got Announce object despite missing family type");
         }
 
+        [Test]
+        public void HandleEventWithAnnounceNull()
+        {
+            AnnounceEventArgs args = new AnnounceEventArgs();
+            args.Announce = null;
+            filter.HandleEvent(null, args);
+            Assert.Null(filteredAnnounce, "got an Announce object");
+        }
+
+        [Test]
+        public void HandleEventWithAnnounceArgsNull()
+        {
+            filter.HandleEvent(null, null);
+            Assert.Null(filteredAnnounce, "got an Announce object");
+        }
+
         private void HandleFilteredEvent(object sender, AnnounceEventArgs args)
         {
             filteredAnnounce = args.Announce;

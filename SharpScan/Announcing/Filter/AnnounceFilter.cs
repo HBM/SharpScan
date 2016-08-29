@@ -53,7 +53,7 @@ namespace Hbm.Devices.Scan.Announcing.Filter
 
         public void HandleEvent(object sender, AnnounceEventArgs args)
         {
-            if ((sender != null) && (args != null))
+            if (args != null)
             {
                 Announce announce = args.Announce;
                 if (this.matcher.Match(announce))
