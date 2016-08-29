@@ -95,5 +95,14 @@ namespace Hbm.Devices.Scan {
                 return ResourceManager.GetString("configurePort", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die 20 ähnelt.
+        /// </summary>
+        internal static string defaultExpirationInSeconds {
+            get {
+                return ResourceManager.GetString("defaultExpirationInSeconds", resourceCulture);
+            }
+        }
     }
 }

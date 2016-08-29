@@ -32,6 +32,7 @@ namespace Hbm.Devices.Scan.Announcing
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Globalization;
     using System.Runtime.Serialization;
 
     [DataContractAttribute]
@@ -127,7 +128,7 @@ namespace Hbm.Devices.Scan.Announcing
 
             if (expiration == 0)
             {
-                expiration = 20;
+                expiration = int.Parse(ScanConstants.defaultExpirationInSeconds, CultureInfo.InvariantCulture);
             }
         }
     }
