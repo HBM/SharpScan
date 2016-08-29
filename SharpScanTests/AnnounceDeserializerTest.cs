@@ -200,6 +200,22 @@ namespace Hbm.Devices.Scan
         }
 
         [Test]
+        public void ParseNoIPv4Addreses()
+        {
+            fmr.EmitNoIPv4Message();
+            Assert.NotNull(announce.Parameters.NetSettings.Interface.InternetProtocolV4, "IPv4 list must not be null");
+            Assert.AreEqual(0, announce.Parameters.NetSettings.Interface.InternetProtocolV4.Count, "IPv4 list not empty");
+        }
+
+        [Test]
+        public void ParseNoIPv6Addreses()
+        {
+            fmr.EmitNoIPv6Message();
+            Assert.NotNull(announce.Parameters.NetSettings.Interface.InternetProtocolV6, "IPv6 list must not be null");
+            Assert.AreEqual(0, announce.Parameters.NetSettings.Interface.InternetProtocolV6.Count, "IPv6 list not empty");
+        }
+
+        [Test]
         public void AnnounceEqualsTest()
         {
             fmr.EmitSingleCorrectMessage();
