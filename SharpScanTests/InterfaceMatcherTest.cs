@@ -92,6 +92,15 @@ namespace Hbm.Devices.Scan
             Assert.NotNull(this.filteredAnnounce, "Didn't got an Announce object");
         }
 
+        [Test]
+        public void HandleEventWithAnnounceNull()
+        {
+            AnnounceEventArgs args = new AnnounceEventArgs();
+            args.Announce = null;
+            filter.HandleEvent(null, args);
+            Assert.Null(filteredAnnounce, "got an Announce object");
+        }
+
         private void HandleFilteredEvent(object sender, AnnounceEventArgs args)
         {
             this.filteredAnnounce = args.Announce;

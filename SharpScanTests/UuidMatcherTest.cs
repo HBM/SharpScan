@@ -94,6 +94,15 @@ namespace Hbm.Devices.Scan
             Assert.Null(filteredAnnounce, "Got an Announce object despite existant UUID");
         }
 
+        [Test]
+        public void HandleEventWithAnnounceNull()
+        {
+            AnnounceEventArgs args = new AnnounceEventArgs();
+            args.Announce = null;
+            filter.HandleEvent(null, args);
+            Assert.Null(filteredAnnounce, "got an Announce object");
+        }
+
         private void HandleFilteredEvent(object sender, AnnounceEventArgs args)
         {
             filteredAnnounce = args.Announce;
