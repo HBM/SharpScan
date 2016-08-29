@@ -71,6 +71,11 @@ namespace Hbm.Devices.Scan
             SendMessage(SharpScanTests.FakeMessages.CorretMessageDifferentServices);
         }
 
+        public void EmitSingleCorrectMessageDifferentServicesShortExpire()
+        {
+            SendMessage(SharpScanTests.FakeMessages.CorretMessageDifferentServicesShortExpire);
+        }
+
         public void EmitSingleCorrectMessageShortExpire()
         {
             SendMessage(SharpScanTests.FakeMessages.CorrectMessageShortExpire);

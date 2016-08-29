@@ -83,7 +83,7 @@ namespace Hbm.Devices.Scan.Announcing
 
         public void HandleEvent(object sender, AnnounceEventArgs args)
         {
-            if ((sender != null) && (args != null))
+            if (args != null)
             {
                 Announce announce = args.Announce;
                 this.ArmTimer(announce);
@@ -143,22 +143,19 @@ namespace Hbm.Devices.Scan.Announcing
 
         private void OnTimedEvent(object source, ElapsedEventArgs e)
         {
-            if (e != null)
+            AnnounceTimer timer = (AnnounceTimer)source;
+            timer.Stop();
+            string path = timer.Announce.Path;
+            lock (this.deviceMap)
             {
-                AnnounceTimer timer = (AnnounceTimer)source;
-                timer.Stop();
-                string path = timer.Announce.Path;
-                lock (this.deviceMap)
-                {
-                    this.deviceMap.Remove(path);
-                }
+                this.deviceMap.Remove(path);
+            }
 
-                if (this.HandleRemoveDevice != null)
-                {
-                    RemoveDeviceEventArgs removeDeviceEvent = new RemoveDeviceEventArgs();
-                    removeDeviceEvent.Announce = timer.Announce;
-                    this.HandleRemoveDevice(this, removeDeviceEvent);
-                }
+            if (this.HandleRemoveDevice != null)
+            {
+                RemoveDeviceEventArgs removeDeviceEvent = new RemoveDeviceEventArgs();
+                removeDeviceEvent.Announce = timer.Announce;
+                this.HandleRemoveDevice(this, removeDeviceEvent);
             }
         }
 

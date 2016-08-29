@@ -129,6 +129,35 @@ namespace Hbm.Devices.Scan
             Assert.True(!newDevice && !updateDevice && !removeDevice, "Got event after closing monitor");
         }
 
+        [Test]
+        public void HandleEventParameterChecking()
+        {
+            Assert.DoesNotThrow(delegate 
+            {
+                monitor.HandleNewDevice -= this.HandleNewDeviceEvent;
+                monitor.HandleUpdateDevice -= this.HandleUpdateDeviceEvent;
+                monitor.HandleRemoveDevice -= this.HandleRemoveDeviceEvent;
+                fmr.EmitSingleCorrectMessageShortExpire();
+                fmr.EmitSingleCorrectMessageDifferentServicesShortExpire();
+                Thread.Sleep(3000);
+            }, "monitor throw exception without attached HandleRemoveDeviceEvent", "null");
+
+            Assert.True(!newDevice && !updateDevice && !removeDevice, "Events fired without event handler attached");
+            Assert.Null(announce, "Announce object not null");
+        }
+
+        [Test]
+        public void HandleEventWithNoArgs()
+        {
+            Assert.DoesNotThrow(delegate
+            {
+                monitor.HandleEvent(null, null);
+            }, "monitor throw exception when HandleEvent called wiht null args", "null");
+
+            Assert.True(!newDevice && !updateDevice && !removeDevice, "Events fired without event handler attached");
+            Assert.Null(announce, "Announce object not null");
+        }
+
         public void HandleNewDeviceEvent(object sender, NewDeviceEventArgs args)
         {
             newDevice = true;
