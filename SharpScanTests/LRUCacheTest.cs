@@ -66,5 +66,16 @@ namespace Hbm.Devices.Scan.Announcing
             cache = new LruCache<string, string>(capacity);
             Assert.AreEqual(cache.Capacity, capacity);
         }
+
+        [Test]
+        public void RemoveNonexistentKey()
+        {
+            cache.Add("key1", "val1");
+            cache.Add("key2", "val2");
+            Assert.AreEqual(2, cache.Count);
+
+            cache.Remove("key5");
+            Assert.AreEqual(2, cache.Count);
+        }
     }
 }
