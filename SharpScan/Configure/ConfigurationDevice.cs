@@ -48,13 +48,5 @@ namespace Hbm.Devices.Scan.Configure
 
             this.uuid = uuid;
         }
-
-        public string Uuid
-        {
-            get
-            {
-                return this.uuid;
-            }
-        }
     }
 }
