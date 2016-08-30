@@ -32,7 +32,6 @@ namespace Hbm.Devices.Scan.Configure
 {
     using System;
     using System.Collections.Generic;
-    using System.Net.NetworkInformation;
     using System.Timers;
 
     public class ConfigurationService
@@ -139,15 +138,15 @@ namespace Hbm.Devices.Scan.Configure
                         {
                             this.awaitingResponses.Remove(queryId);
                             query.Timer.Stop();
-                        }
 
-                        if (response.Error != null)
-                        {
-                            query.Callbacks.OnError(response);
-                        }
-                        else if (response.Result != null)
-                        {
-                            query.Callbacks.OnSuccess(response);
+                            if (response.Error != null)
+                            {
+                                query.Callbacks.OnError(response);
+                            }
+                            else if (response.Result != null)
+                            {
+                                query.Callbacks.OnSuccess(response);
+                            }
                         }
                     }
                 }

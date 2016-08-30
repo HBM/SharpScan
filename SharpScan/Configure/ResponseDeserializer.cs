@@ -49,7 +49,7 @@ namespace Hbm.Devices.Scan.Configure
 
         public void HandleEvent(object sender, MulticastMessageEventArgs args)
         {
-            if ((sender != null) && (this.HandleMessage != null) && (args != null))
+            if ((this.HandleMessage != null) && (args != null))
             {
                 string jsonString = args.JsonString;
   

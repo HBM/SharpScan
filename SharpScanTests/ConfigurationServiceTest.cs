@@ -30,30 +30,97 @@
 
 namespace Hbm.Devices.Scan.Configure
 {
+    using System;
+    using System.Runtime.Serialization.Json;
     using NUnit.Framework;
+    using System.IO;
+    using System.Text;
+    using System.Runtime.Serialization;
 
     [TestFixture]
-    internal class ConfigurationServiceTest
+    internal class ConfigurationServiceTest : IMulticastSender, IConfigurationCallback
     {
+        private bool closed = false;
+        private ResponseDeserializer parser = new ResponseDeserializer();
+        private DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(ConfigurationRequest));
+        private bool gotTimeout;
+        private bool gotSuccessResponse;
+        private bool gotErrorResponse;
+
+        [SetUp]
+        public void setup()
+        {
+            gotTimeout = false;
+            gotSuccessResponse = false;
+            gotErrorResponse = false;
+        }
+
         [Test]
         public void ServiceInstantiationAndClose()
         {
             Assert.DoesNotThrow(delegate 
             {
                 ConfigurationMessageReceiver receiver = new ConfigurationMessageReceiver();
-                ResponseDeserializer parser = new ResponseDeserializer();
                 receiver.HandleMessage += parser.HandleEvent;
-                IMulticastSender sender = new ConfigurationMulticastSender(new ScanInterfaces().NetworkInterfaces);
-                ConfigurationService service = new ConfigurationService(parser, sender);
+                ConfigurationService service = new ConfigurationService(parser, this);
                 service.Close();
             }, "instantiation and closing of ConfigurationService threw exception", "null");
-
         }
 
         [Test]
         public void SendConfigurationTest()
         {
+            ConfigurationService service = new ConfigurationService(this.parser, this);
 
+            ConfigurationDevice device = new ConfigurationDevice("0009E5001231");
+            ConfigurationNetSettings settings = new ConfigurationNetSettings(new ConfigurationInterface("eth0", ConfigurationInterface.Method.Dhcp));
+            ConfigurationParams parameters = new ConfigurationParams(device, settings);
+            service.SendConfiguration(parameters, this, 100);
+            Assert.True(gotSuccessResponse && !gotErrorResponse && !gotTimeout, "got timeout or error for correct configuration response");
+        }
+
+        public void SendMessage(string json)
+        {
+            using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(json)))
+            {
+                try
+                {
+                    ConfigurationRequest request = (ConfigurationRequest)this.deserializer.ReadObject(ms);
+                    string response = "{\"jsonrpc\":\"2.0\",\"id\":\"" + request.QueryId + "\",\"result\":true}";
+                    MulticastMessageEventArgs args = new MulticastMessageEventArgs();
+                    args.JsonString = response;
+                    parser.HandleEvent(null, args);
+                }
+                catch (SerializationException)
+                {
+                    return;
+                }
+            }
+        }
+
+        public void Close()
+        {
+            closed = true;
+        }
+
+        public bool IsClosed()
+        {
+            return closed;
+        }
+
+        public void OnSuccess(JsonRpcResponse response)
+        {
+            gotSuccessResponse = true;
+        }
+
+        public void OnError(JsonRpcResponse response)
+        {
+            gotErrorResponse = true;   
+        }
+
+        public void OnTimeout()
+        {
+            gotTimeout = true;
         }
     }
 }
