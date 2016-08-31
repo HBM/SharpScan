@@ -143,7 +143,7 @@ namespace Hbm.Devices.Scan.Configure
                             {
                                 query.Callbacks.OnError(response);
                             }
-                            else if (response.Result != null)
+                            else
                             {
                                 query.Callbacks.OnSuccess(response);
                             }

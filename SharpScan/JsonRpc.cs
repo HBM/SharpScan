@@ -48,15 +48,5 @@ namespace Hbm.Devices.Scan
         public string Method { get; internal set; }
 
         public string JsonString { get; internal set; }
-
-        public bool Equals(JsonRpc other)
-        {
-            if (object.ReferenceEquals(other, null))
-            {
-                return false;
-            }
-
-            return string.Compare(this.JsonString, other.JsonString, CultureInfo.InvariantCulture, CompareOptions.Ordinal) == 0;
-        }
     }
 }

@@ -49,6 +49,11 @@ namespace Hbm.Devices.Scan.Announcing
             {
                 return this.ipv4Address;
             }
+
+            set
+            {
+                this.ipv4Address = value;
+            }
         }
 
         public string InternetProtocolV6Address
@@ -56,6 +61,11 @@ namespace Hbm.Devices.Scan.Announcing
             get
             {
                 return this.ipv6Address;
+            }
+
+            set
+            {
+                this.ipv6Address = value;
             }
         }
     }

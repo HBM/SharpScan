@@ -35,10 +35,6 @@ namespace Hbm.Devices.Scan.Configure
     [DataContractAttribute]
     public class JsonRpcResponse
     {
-        internal JsonRpcResponse()
-        {
-        }
-
         [DataMember(Name = "jsonrpc")]
         public string Version { get; private set; }
 

@@ -42,22 +42,27 @@ namespace Hbm.Devices.Scan.Configure
             this.InternetProtocolV4 = new ManualInternetProtocolV4Address();
             this.InternetProtocolV4.ManualAddress = address;
             this.InternetProtocolV4.ManualNetMask = mask;
+            this.ConfigurationMethod = ConfigurationInterface.Method.Manual;
         }
 
         public ConfigurationInterface(string configurationInterface, Method mode)
             : this(configurationInterface)
         {
-            this.ConfigurationMethod = mode;
-        }
+            if (mode != Method.Dhcp)
+            {
+                throw new ArgumentException("configure \"manual\" without ip and netmask is not allowed");
+            }
 
-        public ConfigurationInterface(string configurationInterface, string address, string mask, Method mode)
-            : this(configurationInterface, address, mask)
-        {
             this.ConfigurationMethod = mode;
         }
 
         private ConfigurationInterface(string iface)
         {
+            if (string.IsNullOrEmpty(iface))
+            {
+                throw new ArgumentException("interface name must not null or empty");
+            }
+
             this.Name = iface;
         }
 
@@ -84,16 +89,13 @@ namespace Hbm.Devices.Scan.Configure
                 {
                     return "dhcp";
                 }
-
-                if (this.ConfigurationMethod == Method.Manual)
+                else
                 {
                     return "manual";
                 }
-
-                throw new Exception("illegal configuration method");
             }
 
-            set
+            private set
             {
                 if ("manual".Equals(value))
                 {

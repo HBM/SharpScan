@@ -30,6 +30,7 @@
 
 namespace Hbm.Devices.Scan.Configure
 {
+    using System;
     using System.Runtime.Serialization;
     using Announcing;
 
@@ -46,6 +47,19 @@ namespace Hbm.Devices.Scan.Configure
 
         public ConfigurationNetSettings(ConfigurationInterface configurationInterface, DefaultGateway gateway)
         {
+            if ((configurationInterface == null) && (gateway == null))
+            {
+                throw new ArgumentException("you must set either the configuration interface or the default gateway");
+            }
+
+            if (gateway != null)
+            {
+                if (string.IsNullOrEmpty(gateway.InternetProtocolV4Address) && (string.IsNullOrEmpty(gateway.InternetProtocolV6Address)))
+                {
+                    throw new ArgumentException("Neither IPv4 nor IPv6 address set in default gateway");
+                }
+            }
+
             this.ConfigurationInterface = configurationInterface;
             DefaultGateway = gateway;
         }

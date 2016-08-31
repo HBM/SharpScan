@@ -48,6 +48,7 @@
     <Compile Include="AnnounceCacheTest.cs" />
     <Compile Include="AnnounceDeserializerTest.cs" />
     <Compile Include="AnnounceReceiverTest.cs" />
+    <Compile Include="ConfigurationObjectsTests.cs" />
     <Compile Include="ConfigurationServiceTest.cs" />
     <Compile Include="DeviceMonitorTest.cs" />
     <Compile Include="FakeMessageReceiver.cs" />

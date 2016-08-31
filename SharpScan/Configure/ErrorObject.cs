@@ -35,10 +35,6 @@ namespace Hbm.Devices.Scan.Configure
     [DataContractAttribute]
     public class ErrorObject
     {
-        private ErrorObject()
-        {
-        }
-
         [DataMember(Name = "code")]
         public int Code { get; set; }
 
