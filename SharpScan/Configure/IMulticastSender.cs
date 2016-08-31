@@ -32,7 +32,7 @@ namespace Hbm.Devices.Scan.Configure
 {
     public interface IMulticastSender
     {
-        void SendMessage(string json);
+        void SendMessage(string message);
 
         void Close();
 

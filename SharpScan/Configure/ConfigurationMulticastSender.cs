@@ -90,7 +90,7 @@ namespace Hbm.Devices.Scan.Configure
             }
         }
 
-        public void SendMessage(string json)
+        public void SendMessage(string message)
         {
             foreach (NetworkInterface adapter in this.interfaces)
             {
@@ -117,7 +117,7 @@ namespace Hbm.Devices.Scan.Configure
 
                 this.socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastInterface, (int)IPAddress.HostToNetworkOrder(p.Index));
                 this.socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastLoopback, 0);
-                byte[] buffer = Encoding.UTF8.GetBytes(json);
+                byte[] buffer = Encoding.UTF8.GetBytes(message);
                 this.socket.Send(buffer, buffer.Length, SocketFlags.None);
             }
         }
