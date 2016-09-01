@@ -37,20 +37,29 @@ namespace Hbm.Devices.Scan.Configure
     [DataContractAttribute]
     public class ConfigurationNetSettings
     {
-        public ConfigurationNetSettings(ConfigurationInterface configurationInterface) : this(configurationInterface, null)
+        public ConfigurationNetSettings(ConfigurationInterface configurationInterface)
         {
             if (configurationInterface == null)
             {
                 throw new ArgumentNullException("configurationInterface");
             }
+
+            this.ConfigurationInterface = configurationInterface;
         }
 
-        public ConfigurationNetSettings(DefaultGateway gateway) : this(null, gateway)
+        public ConfigurationNetSettings(DefaultGateway gateway)
         {
             if (gateway == null)
             {
                 throw new ArgumentNullException("gateway");
             }
+
+            if (string.IsNullOrEmpty(gateway.InternetProtocolV4Address) && string.IsNullOrEmpty(gateway.InternetProtocolV6Address))
+            {
+                throw new ArgumentException("gateway");
+            }
+
+            this.DefaultGateway = gateway;
         }
 
         public ConfigurationNetSettings(ConfigurationInterface configurationInterface, DefaultGateway gateway)
@@ -74,7 +83,7 @@ namespace Hbm.Devices.Scan.Configure
             }
 
             this.ConfigurationInterface = configurationInterface;
-            DefaultGateway = gateway;
+            this.DefaultGateway = gateway;
         }
 
         [DataMember(Name = "interface")]
