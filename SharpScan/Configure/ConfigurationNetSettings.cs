@@ -49,7 +49,7 @@ namespace Hbm.Devices.Scan.Configure
         {
             if ((configurationInterface == null) && (gateway == null))
             {
-                throw new ArgumentException("you must set either the configuration interface or the default gateway");
+                throw new ArgumentNullException("you must set either the configuration interface or the default gateway");
             }
 
             if (gateway != null)

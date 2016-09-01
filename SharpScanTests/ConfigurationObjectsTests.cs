@@ -87,7 +87,7 @@ namespace Hbm.Devices.Scan.Configure
         [Test]
         public void ConfigurationNetSettings()
         {
-            Assert.Throws<ArgumentException>(
+            Assert.Throws<ArgumentNullException>(
                 delegate
                 {
                     ConfigurationNetSettings settings = new ConfigurationNetSettings(null, null);
