@@ -36,12 +36,13 @@ using Hbm.Devices.Scan.Configure;
 public class Sender : IConfigurationCallback
 {
     private ConfigurationService service;
+    private ConfigurationMessageReceiver receiver;
 
     private Sender()
     {
-        ConfigurationMessageReceiver receiver = new ConfigurationMessageReceiver();
+        this.receiver = new ConfigurationMessageReceiver();
         ResponseDeserializer parser = new ResponseDeserializer();
-        receiver.HandleMessage += parser.HandleEvent;
+        this.receiver.HandleMessage += parser.HandleEvent;
         IMulticastSender sender = new ConfigurationMulticastSender(new ScanInterfaces().NetworkInterfaces);
         this.service = new ConfigurationService(parser, sender);
     }
