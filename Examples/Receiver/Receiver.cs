@@ -46,8 +46,14 @@ public class Receiver
         monitor.HandleNewDevice += receiver.HandleNewDeviceEvent;
         monitor.HandleRemoveDevice += receiver.HandleRemoveDeviceEvent;
         monitor.HandleUpdateDevice += receiver.HandleUpdateDeviceEvent;
-        Console.ReadLine();
-        ar.Close();
+        try
+        {
+            Console.ReadLine();
+        }
+        finally
+        {
+            ar.Close();
+        }
     }
 
     public void HandleNewDeviceEvent(object sender, NewDeviceEventArgs args)
