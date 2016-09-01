@@ -46,7 +46,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnnounceCacheTest.cs" />
-    <Compile Include="AnnounceDeserializerTest.cs" />
+    <Compile Include="AnnounceDeserializerTest.cs">
+      <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="AnnounceReceiverTest.cs" />
     <Compile Include="ConfigurationMulticastSenderTests.cs" />
     <Compile Include="ConfigurationObjectsTests.cs" />

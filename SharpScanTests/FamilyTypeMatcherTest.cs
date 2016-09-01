@@ -28,7 +28,6 @@
 //
 // </copyright>
 
-
 namespace Hbm.Devices.Scan.Configure
 {
     using System;
@@ -37,27 +36,27 @@ namespace Hbm.Devices.Scan.Configure
     using NUnit.Framework;
 
     [TestFixture]
-    class FamilyTypeMatcherTest
+    internal class FamilyTypeMatcherTest
     {
         private Announce filteredAnnounce;
         private Announce announce;
         private FakeMessageReceiver fmr;
         private string[] familyTypes = { FamilyTypeMatcher.QuantumX, FamilyTypeMatcher.PMX };
         private FamilyTypeMatcher matcher;
-        AnnounceFilter filter;
+        private AnnounceFilter filter;
 
         [SetUp]
-        public void setup()
+        public void Setup()
         {
-            matcher = new FamilyTypeMatcher(familyTypes);
-            filteredAnnounce = null;
-            fmr = new FakeMessageReceiver();
+            this.matcher = new FamilyTypeMatcher(this.familyTypes);
+            this.filteredAnnounce = null;
+            this.fmr = new FakeMessageReceiver();
             AnnounceDeserializer parser = new AnnounceDeserializer();
-            fmr.HandleMessage += parser.HandleEvent;
-            filter = new AnnounceFilter(matcher);
-            parser.HandleMessage += filter.HandleEvent;
+            this.fmr.HandleMessage += parser.HandleEvent;
+            this.filter = new AnnounceFilter(this.matcher);
+            parser.HandleMessage += this.filter.HandleEvent;
             parser.HandleMessage += this.HandleAnnounceEvent;
-            filter.HandleMessage += this.HandleFilteredEvent;
+            this.filter.HandleMessage += this.HandleFilteredEvent;
         }
 
         [Test]
@@ -69,23 +68,23 @@ namespace Hbm.Devices.Scan.Configure
         [Test]
         public void CheckFamilyTypesTest()
         {
-            Assert.AreEqual(familyTypes, matcher.GetFilterStrings());
-            Assert.AreEqual(matcher, filter.Matcher);
+            Assert.AreEqual(this.familyTypes, this.matcher.GetFilterStrings());
+            Assert.AreEqual(this.matcher, this.filter.Matcher);
         }
 
         [Test]
         public void FilterCorrectMessageTest()
         {
-            fmr.EmitSingleCorrectMessage();
-            Assert.NotNull(filteredAnnounce, "Didn't got an Announce object");
+            this.fmr.EmitSingleCorrectMessage();
+            Assert.NotNull(this.filteredAnnounce, "Didn't got an Announce object");
         }
 
         [Test]
         public void FilterMissingFamilyTypeMessageTest()
         {
-            fmr.EmitMissingFamilytypeMessage();
-            Assert.NotNull(announce, "No announce parsed");
-            Assert.Null(filteredAnnounce, "Got Announce object despite missing family type");
+            this.fmr.EmitMissingFamilytypeMessage();
+            Assert.NotNull(this.announce, "No announce parsed");
+            Assert.Null(this.filteredAnnounce, "Got Announce object despite missing family type");
         }
 
         [Test]
@@ -93,25 +92,25 @@ namespace Hbm.Devices.Scan.Configure
         {
             AnnounceEventArgs args = new AnnounceEventArgs();
             args.Announce = null;
-            filter.HandleEvent(null, args);
-            Assert.Null(filteredAnnounce, "got an Announce object");
+            this.filter.HandleEvent(null, args);
+            Assert.Null(this.filteredAnnounce, "got an Announce object");
         }
 
         [Test]
         public void HandleEventWithAnnounceArgsNull()
         {
-            filter.HandleEvent(null, null);
-            Assert.Null(filteredAnnounce, "got an Announce object");
+            this.filter.HandleEvent(null, null);
+            Assert.Null(this.filteredAnnounce, "got an Announce object");
         }
 
         private void HandleFilteredEvent(object sender, AnnounceEventArgs args)
         {
-            filteredAnnounce = args.Announce;
+            this.filteredAnnounce = args.Announce;
         }
 
         private void HandleAnnounceEvent(object sender, AnnounceEventArgs args)
         {
-            announce = args.Announce;
+            this.announce = args.Announce;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿// <copyright file="ConfigurationMutlicastSenderTests.cs" company="Hottinger Baldwin Messtechnik GmbH">
+﻿// <copyright file="ConfigurationMulticastSenderTests.cs" company="Hottinger Baldwin Messtechnik GmbH">
 //
 // SharpScan, a library for scanning and configuring HBM devices.
 //
@@ -34,58 +34,67 @@ namespace Hbm.Devices.Scan.Configure
     using NUnit.Framework;
 
     [TestFixture]
-    class ConfigurationMulticastSenderTests
+    internal class ConfigurationMulticastSenderTests
     {
-
         [Test]
         public void ConfigurationMulticastSenderInstantiationTest()
         {
-            Assert.DoesNotThrow(delegate
-            {
-                IMulticastSender sender = new ConfigurationMulticastSender(new ScanInterfaces().NetworkInterfaces);
-                sender.Close();
-                Assert.True(sender.IsClosed(), "sender n ot marked close after closing");
-            }, "Instantiation or closing a ConfigurationMulticastSender threw an exception");
+            Assert.DoesNotThrow(
+                delegate
+                {
+                    IMulticastSender sender = new ConfigurationMulticastSender(new ScanInterfaces().NetworkInterfaces);
+                    sender.Close();
+                    Assert.True(sender.IsClosed(), "sender n ot marked close after closing");
+                },
+                "Instantiation or closing a ConfigurationMulticastSender threw an exception");
 
-            Assert.Throws<ArgumentNullException>(delegate
-            {
-                IMulticastSender sender = new ConfigurationMulticastSender(null);
-            }, "Instantiation with no interface list is not allowed");
+            Assert.Throws<ArgumentNullException>(
+                delegate
+                {
+                    IMulticastSender sender = new ConfigurationMulticastSender(null);
+                },
+                "Instantiation with no interface list is not allowed");
         }
 
         [Test]
         public void DoubleCloseTest()
         {
-            Assert.DoesNotThrow(delegate
-            {
-                IMulticastSender sender = new ConfigurationMulticastSender(new ScanInterfaces().NetworkInterfaces);
-                sender.Close();
-                sender.Close();
-            }, "Double closing a ConfigurationMulticastSender threw an exception");
+            Assert.DoesNotThrow(
+                delegate
+                {
+                    IMulticastSender sender = new ConfigurationMulticastSender(new ScanInterfaces().NetworkInterfaces);
+                    sender.Close();
+                    sender.Close();
+                },
+                "Double closing a ConfigurationMulticastSender threw an exception");
         }
 
         [Test]
         public void SendMessageTest()
         {
-            Assert.DoesNotThrow(delegate
-            {
-                IMulticastSender sender = new ConfigurationMulticastSender(new ScanInterfaces().NetworkInterfaces);
-                sender.SendMessage("foobar");
-                sender.Close();
-                Assert.True(sender.IsClosed(), "sender n ot marked close after closing");
-            }, "Sending a message threw an exception");
+            Assert.DoesNotThrow(
+                delegate
+                {
+                    IMulticastSender sender = new ConfigurationMulticastSender(new ScanInterfaces().NetworkInterfaces);
+                    sender.SendMessage("foobar");
+                    sender.Close();
+                    Assert.True(sender.IsClosed(), "sender n ot marked close after closing");
+                },
+                "Sending a message threw an exception");
         }
 
         [Test]
         public void SendNullMessageTest()
         {
-            Assert.DoesNotThrow(delegate
-            {
-                IMulticastSender sender = new ConfigurationMulticastSender(new ScanInterfaces().NetworkInterfaces);
-                sender.SendMessage(null);
-                sender.Close();
-                Assert.True(sender.IsClosed(), "sender n ot marked close after closing");
-            }, "Sending a message threw an exception");
+            Assert.DoesNotThrow(
+                delegate
+                {
+                    IMulticastSender sender = new ConfigurationMulticastSender(new ScanInterfaces().NetworkInterfaces);
+                    sender.SendMessage(null);
+                    sender.Close();
+                    Assert.True(sender.IsClosed(), "sender n ot marked close after closing");
+                },
+                "Sending a message threw an exception");
         }
     }
 }

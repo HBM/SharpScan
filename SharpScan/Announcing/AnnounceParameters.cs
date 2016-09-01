@@ -121,14 +121,14 @@ namespace Hbm.Devices.Scan.Announcing
              * Ensure that we always have an expiration time greater zero.
              * Later handling of Announce objects (i.e. DeviceMonitor) can rely on a valid expiration time.
              */
-            if (expiration < 0)
+            if (this.expiration < 0)
             {
                 throw new SerializationException("negative expiration times are not allowed");
             }
 
-            if (expiration == 0)
+            if (this.expiration == 0)
             {
-                expiration = int.Parse(ScanConstants.defaultExpirationInSeconds, CultureInfo.InvariantCulture);
+                this.expiration = int.Parse(ScanConstants.defaultExpirationInSeconds, CultureInfo.InvariantCulture);
             }
         }
     }

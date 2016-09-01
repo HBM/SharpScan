@@ -54,7 +54,7 @@ namespace Hbm.Devices.Scan.Configure
 
             if (gateway != null)
             {
-                if (string.IsNullOrEmpty(gateway.InternetProtocolV4Address) && (string.IsNullOrEmpty(gateway.InternetProtocolV6Address)))
+                if (string.IsNullOrEmpty(gateway.InternetProtocolV4Address) && string.IsNullOrEmpty(gateway.InternetProtocolV6Address))
                 {
                     throw new ArgumentException("Neither IPv4 nor IPv6 address set in default gateway");
                 }

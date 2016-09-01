@@ -35,7 +35,7 @@ namespace Hbm.Devices.Scan
     using NUnit.Framework;
 
     [TestFixture]
-    class DeviceMonitorTest
+    internal class DeviceMonitorTest
     {
         private bool newDevice;
         private bool updateDevice;
@@ -47,134 +47,140 @@ namespace Hbm.Devices.Scan
         private DeviceMonitor monitor;
 
         [SetUp]
-        public void setup()
+        public void Setup()
         {
-            newDevice = false;
-            updateDevice = false;
-            removeDevice = false;
-            announce = null;
-            oldAnnounce = null;
+            this.newDevice = false;
+            this.updateDevice = false;
+            this.removeDevice = false;
+            this.announce = null;
+            this.oldAnnounce = null;
 
-            fmr = new FakeMessageReceiver();
+            this.fmr = new FakeMessageReceiver();
             AnnounceDeserializer parser = new AnnounceDeserializer();
-            fmr.HandleMessage += parser.HandleEvent;
-            monitor = new DeviceMonitor();
-            parser.HandleMessage += monitor.HandleEvent;
-            monitor.HandleNewDevice += this.HandleNewDeviceEvent;
-            monitor.HandleRemoveDevice += this.HandleRemoveDeviceEvent;
-            monitor.HandleUpdateDevice += this.HandleUpdateDeviceEvent;
+            this.fmr.HandleMessage += parser.HandleEvent;
+            this.monitor = new DeviceMonitor();
+            parser.HandleMessage += this.monitor.HandleEvent;
+            this.monitor.HandleNewDevice += this.HandleNewDeviceEvent;
+            this.monitor.HandleRemoveDevice += this.HandleRemoveDeviceEvent;
+            this.monitor.HandleUpdateDevice += this.HandleUpdateDeviceEvent;
         }
 
         [Test]
         public void NewDeviceEventTest()
         {
-            fmr.EmitSingleCorrectMessage();
-            Assert.True(newDevice && !updateDevice && !removeDevice, "No new device event fired");
-            Assert.NotNull(announce, "No announce in event");
+            this.fmr.EmitSingleCorrectMessage();
+            Assert.True(this.newDevice && !this.updateDevice && !this.removeDevice, "No new device event fired");
+            Assert.NotNull(this.announce, "No announce in event");
         }
 
         [Test]
         public void UpdateDeviceEventTest()
         {
-            fmr.EmitSingleCorrectMessage();
-            Assert.True(newDevice && !updateDevice && !removeDevice, "No new device event fired");
-            Assert.NotNull(announce, "No announce in event");
-            newDevice = false;
+            this.fmr.EmitSingleCorrectMessage();
+            Assert.True(this.newDevice && !this.updateDevice && !this.removeDevice, "No new device event fired");
+            Assert.NotNull(this.announce, "No announce in event");
+            this.newDevice = false;
 
-            fmr.EmitSingleCorrectMessageDifferentServices();
-            Assert.True(!newDevice && updateDevice && !removeDevice, "No update device event fired");
-            Assert.NotNull(announce, "No new announce in event");
-            Assert.NotNull(oldAnnounce, "No old announce in event");
-            newDevice = false;
-            removeDevice = false;
-            updateDevice = false;
+            this.fmr.EmitSingleCorrectMessageDifferentServices();
+            Assert.True(!this.newDevice && this.updateDevice && !this.removeDevice, "No update device event fired");
+            Assert.NotNull(this.announce, "No new announce in event");
+            Assert.NotNull(this.oldAnnounce, "No old announce in event");
+            this.newDevice = false;
+            this.removeDevice = false;
+            this.updateDevice = false;
 
-            fmr.EmitSingleCorrectMessageDifferentServices();
-            Assert.True(!newDevice && !updateDevice && !removeDevice, "Update event fired twice");
+            this.fmr.EmitSingleCorrectMessageDifferentServices();
+            Assert.True(!this.newDevice && !this.updateDevice && !this.removeDevice, "Update event fired twice");
         }
 
         [Test]
         public void RemoveDeviceEventTest()
         {
-            fmr.EmitSingleCorrectMessageShortExpire();
+            this.fmr.EmitSingleCorrectMessageShortExpire();
             Thread.Sleep(3000);
-            Assert.True(newDevice && !updateDevice && removeDevice, "No remove event fired");
-            Assert.NotNull(announce, "No announce in event");
+            Assert.True(this.newDevice && !this.updateDevice && this.removeDevice, "No remove event fired");
+            Assert.NotNull(this.announce, "No announce in event");
         }
 
         [Test]
         public void StopWithoutRunningTimerTest()
         {
-            Assert.False(monitor.IsClosed(), "DeviceMonitor monitor");
-            monitor.Close();
-            Assert.True(monitor.IsClosed(), "DeviceMonitor not closed");
+            Assert.False(this.monitor.IsClosed(), "DeviceMonitor monitor");
+            this.monitor.Close();
+            Assert.True(this.monitor.IsClosed(), "DeviceMonitor not closed");
         }
 
         [Test]
         public void StopWithRunningTimerTest()
         {
-            Assert.False(monitor.IsClosed(), "DeviceMonitor monitor");
-            fmr.EmitSingleCorrectMessage();
-            monitor.Close();
-            Assert.True(monitor.IsClosed(), "DeviceMonitor not closed");
+            Assert.False(this.monitor.IsClosed(), "DeviceMonitor monitor");
+            this.fmr.EmitSingleCorrectMessage();
+            this.monitor.Close();
+            Assert.True(this.monitor.IsClosed(), "DeviceMonitor not closed");
         }
 
         [Test]
         public void MessageAfterCloseTest()
         {
-            Assert.False(monitor.IsClosed(), "DeviceMonitor monitor");
-            monitor.Close();
-            Assert.True(monitor.IsClosed(), "DeviceMonitor not closed");
-            fmr.EmitSingleCorrectMessage();
-            Assert.True(!newDevice && !updateDevice && !removeDevice, "Got event after closing monitor");
+            Assert.False(this.monitor.IsClosed(), "DeviceMonitor monitor");
+            this.monitor.Close();
+            Assert.True(this.monitor.IsClosed(), "DeviceMonitor not closed");
+            this.fmr.EmitSingleCorrectMessage();
+            Assert.True(!this.newDevice && !this.updateDevice && !this.removeDevice, "Got event after closing monitor");
         }
 
         [Test]
         public void HandleEventParameterChecking()
         {
-            Assert.DoesNotThrow(delegate 
-            {
-                monitor.HandleNewDevice -= this.HandleNewDeviceEvent;
-                monitor.HandleUpdateDevice -= this.HandleUpdateDeviceEvent;
-                monitor.HandleRemoveDevice -= this.HandleRemoveDeviceEvent;
-                fmr.EmitSingleCorrectMessageShortExpire();
-                fmr.EmitSingleCorrectMessageDifferentServicesShortExpire();
-                Thread.Sleep(3000);
-            }, "monitor throw exception without attached HandleRemoveDeviceEvent", "null");
+            Assert.DoesNotThrow(
+                delegate 
+                {
+                    this.monitor.HandleNewDevice -= this.HandleNewDeviceEvent;
+                    this.monitor.HandleUpdateDevice -= this.HandleUpdateDeviceEvent;
+                    this.monitor.HandleRemoveDevice -= this.HandleRemoveDeviceEvent;
+                    this.fmr.EmitSingleCorrectMessageShortExpire();
+                    this.fmr.EmitSingleCorrectMessageDifferentServicesShortExpire();
+                    Thread.Sleep(3000);
+                },
+                "monitor throw exception without attached HandleRemoveDeviceEvent",
+                "null");
 
-            Assert.True(!newDevice && !updateDevice && !removeDevice, "Events fired without event handler attached");
-            Assert.Null(announce, "Announce object not null");
+            Assert.True(!this.newDevice && !this.updateDevice && !this.removeDevice, "Events fired without event handler attached");
+            Assert.Null(this.announce, "Announce object not null");
         }
 
         [Test]
         public void HandleEventWithNoArgs()
         {
-            Assert.DoesNotThrow(delegate
-            {
-                monitor.HandleEvent(null, null);
-            }, "monitor throw exception when HandleEvent called wiht null args", "null");
+            Assert.DoesNotThrow(
+                delegate
+                {
+                    this.monitor.HandleEvent(null, null);
+                },
+                "monitor throw exception when HandleEvent called wiht null args",
+                "null");
 
-            Assert.True(!newDevice && !updateDevice && !removeDevice, "Events fired without event handler attached");
-            Assert.Null(announce, "Announce object not null");
+            Assert.True(!this.newDevice && !this.updateDevice && !this.removeDevice, "Events fired without event handler attached");
+            Assert.Null(this.announce, "Announce object not null");
         }
 
         public void HandleNewDeviceEvent(object sender, NewDeviceEventArgs args)
         {
-            newDevice = true;
-            announce = args.Announce;
+            this.newDevice = true;
+            this.announce = args.Announce;
         }
 
         public void HandleRemoveDeviceEvent(object sender, RemoveDeviceEventArgs args)
         {
-            removeDevice = true;
-            announce = args.Announce;
+            this.removeDevice = true;
+            this.announce = args.Announce;
         }
 
         public void HandleUpdateDeviceEvent(object sender, UpdateDeviceEventArgs args)
         {
-            updateDevice = true;
-            announce = args.NewAnnounce;
-            oldAnnounce = args.OldAnnounce;
+            this.updateDevice = true;
+            this.announce = args.NewAnnounce;
+            this.oldAnnounce = args.OldAnnounce;
         }
     }
 }

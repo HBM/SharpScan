@@ -42,8 +42,15 @@ namespace Hbm.Devices.Scan.Configure
     [TestFixture]
     internal class ConfigurationServiceTest : IMulticastSender, IConfigurationCallback
     {
+        private bool closed = false;
+        private ResponseDeserializer parser = new ResponseDeserializer();
+        private DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(ConfigurationRequest));
+        private bool gotTimeout;
+        private bool gotSuccessResponse;
+        private bool gotErrorResponse;
+        private ResponseType response;
 
-        enum responseType
+        internal enum ResponseType
         {
             responseSuccess,
             noResponse,
@@ -52,35 +59,30 @@ namespace Hbm.Devices.Scan.Configure
             responseNoErrorNoResult,
             responseIllegalJson,
             responseEmptyJson
-        };
-
-        private bool closed = false;
-        private ResponseDeserializer parser = new ResponseDeserializer();
-        private DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(ConfigurationRequest));
-        private bool gotTimeout;
-        private bool gotSuccessResponse;
-        private bool gotErrorResponse;
-        private responseType response;
+        }
 
         [SetUp]
-        public void setup()
+        public void Setup()
         {
-            gotTimeout = false;
-            gotSuccessResponse = false;
-            gotErrorResponse = false;
-            response = responseType.responseSuccess;
+            this.gotTimeout = false;
+            this.gotSuccessResponse = false;
+            this.gotErrorResponse = false;
+            this.response = ResponseType.responseSuccess;
         }
 
         [Test]
         public void ServiceInstantiationAndClose()
         {
-            Assert.DoesNotThrow(delegate 
-            {
-                ConfigurationMessageReceiver receiver = new ConfigurationMessageReceiver();
-                receiver.HandleMessage += parser.HandleEvent;
-                ConfigurationService service = new ConfigurationService(parser, this);
-                service.Close();
-            }, "instantiation and closing of ConfigurationService threw exception", "null");
+            Assert.DoesNotThrow(
+                delegate 
+                {
+                    ConfigurationMessageReceiver receiver = new ConfigurationMessageReceiver();
+                    receiver.HandleMessage += this.parser.HandleEvent;
+                    ConfigurationService service = new ConfigurationService(this.parser, this);
+                    service.Close();
+                },
+                "instantiation and closing of ConfigurationService threw exception",
+                "null");
         }
 
         [Test]
@@ -92,7 +94,7 @@ namespace Hbm.Devices.Scan.Configure
             ConfigurationNetSettings settings = new ConfigurationNetSettings(new ConfigurationInterface("eth0", ConfigurationInterface.Method.Dhcp));
             ConfigurationParams parameters = new ConfigurationParams(device, settings);
             service.SendConfiguration(parameters, this, 1000);
-            Assert.True(gotSuccessResponse && !gotErrorResponse && !gotTimeout, "got timeout or error for correct configuration response");
+            Assert.True(this.gotSuccessResponse && !this.gotErrorResponse && !this.gotTimeout, "got timeout or error for correct configuration response");
         }
 
         [Test]
@@ -104,7 +106,7 @@ namespace Hbm.Devices.Scan.Configure
             ConfigurationNetSettings settings = new ConfigurationNetSettings(new ConfigurationInterface("eth0", "172.19.3.4", "255.255.0.0"));
             ConfigurationParams parameters = new ConfigurationParams(device, settings);
             service.SendConfiguration(parameters, this, 1000);
-            Assert.True(gotSuccessResponse && !gotErrorResponse && !gotTimeout, "got timeout or error for correct configuration response");
+            Assert.True(this.gotSuccessResponse && !this.gotErrorResponse && !this.gotTimeout, "got timeout or error for correct configuration response");
         }
 
         [Test]
@@ -118,7 +120,7 @@ namespace Hbm.Devices.Scan.Configure
             ConfigurationNetSettings settings = new ConfigurationNetSettings(gateway);
             ConfigurationParams parameters = new ConfigurationParams(device, settings);
             service.SendConfiguration(parameters, this, 1000);
-            Assert.True(gotSuccessResponse && !gotErrorResponse && !gotTimeout, "got timeout or error for correct configuration response");
+            Assert.True(this.gotSuccessResponse && !this.gotErrorResponse && !this.gotTimeout, "got timeout or error for correct configuration response");
         }
 
         [Test]
@@ -132,52 +134,62 @@ namespace Hbm.Devices.Scan.Configure
             ConfigurationNetSettings settings = new ConfigurationNetSettings(gateway);
             ConfigurationParams parameters = new ConfigurationParams(device, settings);
             service.SendConfiguration(parameters, this, 1000);
-            Assert.True(gotSuccessResponse && !gotErrorResponse && !gotTimeout, "got timeout or error for correct configuration response");
+            Assert.True(this.gotSuccessResponse && !this.gotErrorResponse && !this.gotTimeout, "got timeout or error for correct configuration response");
         }
 
         [Test]
         public void SendConfigurationTestNoIpGateway()
         {
-            Assert.Throws<ArgumentException>(delegate
-            {
-                DefaultGateway gateway = new DefaultGateway();
-                ConfigurationNetSettings settings = new ConfigurationNetSettings(gateway);
-            }, "no exception if neither IPv4 nor IPv6 address set");
+            Assert.Throws<ArgumentException>(
+                delegate
+                {
+                    DefaultGateway gateway = new DefaultGateway();
+                    ConfigurationNetSettings settings = new ConfigurationNetSettings(gateway);
+                },
+                "no exception if neither IPv4 nor IPv6 address set");
         }
 
         [Test]
         public void IllegalParamatersTest()
         {
-            ConfigurationService service = new ConfigurationService(parser, this);
+            ConfigurationService service = new ConfigurationService(this.parser, this);
 
-            Assert.Throws<ArgumentException>(delegate
-            {
-                service.SendConfiguration(null, "bla", this, 1000);
-            }, "no exception thrown if no configuration parameter given");
+            Assert.Throws<ArgumentException>(
+                delegate
+                {
+                    service.SendConfiguration(null, "bla", this, 1000);
+                },
+                "no exception thrown if no configuration parameter given");
 
             ConfigurationDevice device = new ConfigurationDevice("0009E5001231");
             ConfigurationNetSettings settings = new ConfigurationNetSettings(new ConfigurationInterface("eth0", ConfigurationInterface.Method.Dhcp));
             ConfigurationParams parameters = new ConfigurationParams(device, settings);
-            Assert.Throws<ArgumentException>(delegate
-            {
-                service.SendConfiguration(parameters, null, this, 1000);
-            }, "no exception thrown if no query ID given");
+            Assert.Throws<ArgumentException>(
+                delegate
+                {
+                    service.SendConfiguration(parameters, null, this, 1000);
+                },
+                "no exception thrown if no query ID given");
 
-            Assert.Throws<ArgumentException>(delegate
-            {
-                service.SendConfiguration(parameters, "foo", null, 1000);
-            }, "no exception thrown if no callbacks given");
+            Assert.Throws<ArgumentException>(
+                delegate
+                {
+                    service.SendConfiguration(parameters, "foo", null, 1000);
+                },
+                "no exception thrown if no callbacks given");
 
-            Assert.Throws<ArgumentException>(delegate
-            {
-                service.SendConfiguration(parameters, "foo", this, -10);
-            }, "no exception thrown if negative timeout given");
+            Assert.Throws<ArgumentException>(
+                delegate
+                {
+                    service.SendConfiguration(parameters, "foo", this, -10);
+                },
+                "no exception thrown if negative timeout given");
         }
 
         [Test]
         public void SendConfigurationTimeout()
         {
-            response = responseType.noResponse;
+            this.response = ResponseType.noResponse;
             ConfigurationService service = new ConfigurationService(this.parser, this);
 
             ConfigurationDevice device = new ConfigurationDevice("0009E5001231");
@@ -185,13 +197,13 @@ namespace Hbm.Devices.Scan.Configure
             ConfigurationParams parameters = new ConfigurationParams(device, settings);
             service.SendConfiguration(parameters, this, 10);
             Thread.Sleep(100);
-            Assert.True(!gotSuccessResponse && !gotErrorResponse && gotTimeout, "got no timeout if no response was sent");
+            Assert.True(!this.gotSuccessResponse && !this.gotErrorResponse && this.gotTimeout, "got no timeout if no response was sent");
         }
 
         [Test]
         public void SendConfigurationNoQueryIdResponse()
         {
-            response = responseType.responseNoQueryId;
+            this.response = ResponseType.responseNoQueryId;
             ConfigurationService service = new ConfigurationService(this.parser, this);
 
             ConfigurationDevice device = new ConfigurationDevice("0009E5001231");
@@ -199,13 +211,13 @@ namespace Hbm.Devices.Scan.Configure
             ConfigurationParams parameters = new ConfigurationParams(device, settings);
             service.SendConfiguration(parameters, this, 10);
             Thread.Sleep(100);
-            Assert.True(!gotSuccessResponse && !gotErrorResponse && gotTimeout, "got no timeout if response with no query ID was sent");
+            Assert.True(!this.gotSuccessResponse && !this.gotErrorResponse && this.gotTimeout, "got no timeout if response with no query ID was sent");
         }
 
         [Test]
         public void SendConfigurationIllegalResponse()
         {
-            response = responseType.responseIllegalJson;
+            this.response = ResponseType.responseIllegalJson;
             ConfigurationService service = new ConfigurationService(this.parser, this);
 
             ConfigurationDevice device = new ConfigurationDevice("0009E5001231");
@@ -213,13 +225,13 @@ namespace Hbm.Devices.Scan.Configure
             ConfigurationParams parameters = new ConfigurationParams(device, settings);
             service.SendConfiguration(parameters, this, 10);
             Thread.Sleep(100);
-            Assert.True(!gotSuccessResponse && !gotErrorResponse && gotTimeout, "got no timeout if illegal response was sent");
+            Assert.True(!this.gotSuccessResponse && !this.gotErrorResponse && this.gotTimeout, "got no timeout if illegal response was sent");
         }
 
         [Test]
         public void SendConfigurationNullResponse()
         {
-            response = responseType.responseEmptyJson;
+            this.response = ResponseType.responseEmptyJson;
             ConfigurationService service = new ConfigurationService(this.parser, this);
 
             ConfigurationDevice device = new ConfigurationDevice("0009E5001231");
@@ -227,13 +239,13 @@ namespace Hbm.Devices.Scan.Configure
             ConfigurationParams parameters = new ConfigurationParams(device, settings);
             service.SendConfiguration(parameters, this, 10);
             Thread.Sleep(100);
-            Assert.True(!gotSuccessResponse && !gotErrorResponse && gotTimeout, "got no timeout if null response was sent");
+            Assert.True(!this.gotSuccessResponse && !this.gotErrorResponse && this.gotTimeout, "got no timeout if null response was sent");
         }
 
         [Test]
         public void SendConfigurationNoErrorNoResultResponse()
         {
-            response = responseType.responseNoErrorNoResult;
+            this.response = ResponseType.responseNoErrorNoResult;
             ConfigurationService service = new ConfigurationService(this.parser, this);
 
             ConfigurationDevice device = new ConfigurationDevice("0009E5001231");
@@ -241,26 +253,26 @@ namespace Hbm.Devices.Scan.Configure
             ConfigurationParams parameters = new ConfigurationParams(device, settings);
             service.SendConfiguration(parameters, this, 10);
             Thread.Sleep(100);
-            Assert.True(!gotSuccessResponse && !gotErrorResponse && gotTimeout, "got no timeout if response with no result/error was sent");
+            Assert.True(!this.gotSuccessResponse && !this.gotErrorResponse && this.gotTimeout, "got no timeout if response with no result/error was sent");
         }
 
         [Test]
         public void SendConfigurationErrorResponse()
         {
-            response = responseType.responseError;
+            this.response = ResponseType.responseError;
             ConfigurationService service = new ConfigurationService(this.parser, this);
 
             ConfigurationDevice device = new ConfigurationDevice("0009E5001231");
             ConfigurationNetSettings settings = new ConfigurationNetSettings(new ConfigurationInterface("eth0", ConfigurationInterface.Method.Dhcp));
             ConfigurationParams parameters = new ConfigurationParams(device, settings);
             service.SendConfiguration(parameters, this, 1000);
-            Assert.True(!gotSuccessResponse && gotErrorResponse && !gotTimeout, "got no error callback if error response was sent");
+            Assert.True(!this.gotSuccessResponse && this.gotErrorResponse && !this.gotTimeout, "got no error callback if error response was sent");
         }
 
         [Test]
         public void CloseWhileSendingConfiguration()
         {
-            response = responseType.noResponse;
+            this.response = ResponseType.noResponse;
             ConfigurationService service = new ConfigurationService(this.parser, this);
 
             ConfigurationDevice device = new ConfigurationDevice("0009E5001231");
@@ -268,74 +280,80 @@ namespace Hbm.Devices.Scan.Configure
             ConfigurationParams parameters = new ConfigurationParams(device, settings);
             service.SendConfiguration(parameters, this, 1000);
             service.Close();
-            Assert.True(!gotSuccessResponse && !gotErrorResponse && !gotTimeout, "got callbacks after closing the service");
+            Assert.True(!this.gotSuccessResponse && !this.gotErrorResponse && !this.gotTimeout, "got callbacks after closing the service");
         }
 
         public void SendMessage(string json)
         {
             using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(json)))
             {
-                switch (response)
+                switch (this.response)
                 {
                     default:
-                    case responseType.responseSuccess:
+                    case ResponseType.responseSuccess:
                         {
                             ConfigurationRequest request = (ConfigurationRequest)this.deserializer.ReadObject(ms);
                             string responseString = "{\"jsonrpc\":\"2.0\",\"id\":\"" + request.QueryId + "\",\"result\":true}";
                             MulticastMessageEventArgs args = new MulticastMessageEventArgs();
                             args.JsonString = responseString;
-                            parser.HandleEvent(null, args);
+                            this.parser.HandleEvent(null, args);
                         }
+
                         break;
 
-                    case responseType.noResponse:
+                    case ResponseType.noResponse:
                         break;
 
-                    case responseType.responseError:
+                    case ResponseType.responseError:
                         {
                             ConfigurationRequest request = (ConfigurationRequest)this.deserializer.ReadObject(ms);
                             string responseString = "{\"jsonrpc\":\"2.0\",\"id\":\"" + request.QueryId + "\",\"error\":{\"code\": -32602, \"data\": \"error\", \"message\": \"Invalid method parameters\"}}";
                             MulticastMessageEventArgs args = new MulticastMessageEventArgs();
                             args.JsonString = responseString;
-                            parser.HandleEvent(null, args);
+                            this.parser.HandleEvent(null, args);
                         }
+
                         break;
 
-                    case responseType.responseNoQueryId:
+                    case ResponseType.responseNoQueryId:
                         {
                             ConfigurationRequest request = (ConfigurationRequest)this.deserializer.ReadObject(ms);
                             string responseString = "{\"jsonrpc\":\"2.0\",\"error\":{\"code\": -32602, \"message\": \"Invalid method parameters\"}}";
                             MulticastMessageEventArgs args = new MulticastMessageEventArgs();
                             args.JsonString = responseString;
-                            parser.HandleEvent(null, args);
+                            this.parser.HandleEvent(null, args);
                         }
+
                         break;
 
-                    case responseType.responseNoErrorNoResult:
+                    case ResponseType.responseNoErrorNoResult:
                         {
                             ConfigurationRequest request = (ConfigurationRequest)this.deserializer.ReadObject(ms);
                             string responseString = "{\"jsonrpc\":\"2.0\",\"id\":\"" + request.QueryId + "\"}";
                             MulticastMessageEventArgs args = new MulticastMessageEventArgs();
                             args.JsonString = responseString;
-                            parser.HandleEvent(null, args);
+                            this.parser.HandleEvent(null, args);
                         }
+
                         break;
 
-                    case responseType.responseIllegalJson:
+                    case ResponseType.responseIllegalJson:
                         {
                             ConfigurationRequest request = (ConfigurationRequest)this.deserializer.ReadObject(ms);
                             MulticastMessageEventArgs args = new MulticastMessageEventArgs();
                             args.JsonString = @"{""jsonrpc""2.0"",""id"":""" + request.QueryId + @"""}";
-                            parser.HandleEvent(null, args);
+                            this.parser.HandleEvent(null, args);
                         }
+
                         break;
-                    case responseType.responseEmptyJson:
+                    case ResponseType.responseEmptyJson:
                         {
                             ConfigurationRequest request = (ConfigurationRequest)this.deserializer.ReadObject(ms);
                             MulticastMessageEventArgs args = new MulticastMessageEventArgs();
                             args.JsonString = null;
-                            parser.HandleEvent(null, args);
+                            this.parser.HandleEvent(null, args);
                         }
+
                         break;
                 }
             }
@@ -343,27 +361,27 @@ namespace Hbm.Devices.Scan.Configure
 
         public void Close()
         {
-            closed = true;
+            this.closed = true;
         }
 
         public bool IsClosed()
         {
-            return closed;
+            return this.closed;
         }
 
         public void OnSuccess(JsonRpcResponse response)
         {
-            gotSuccessResponse = true;
+            this.gotSuccessResponse = true;
         }
 
         public void OnError(JsonRpcResponse response)
         {
-            gotErrorResponse = true;   
+            this.gotErrorResponse = true;   
         }
 
         public void OnTimeout()
         {
-            gotTimeout = true;
+            this.gotTimeout = true;
         }
     }
 }

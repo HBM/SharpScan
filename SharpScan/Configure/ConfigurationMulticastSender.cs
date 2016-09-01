@@ -127,6 +127,7 @@ namespace Hbm.Devices.Scan.Configure
                 {
                     buffer = Encoding.UTF8.GetBytes(message);
                 }
+
                 this.socket.Send(buffer, buffer.Length, SocketFlags.None);
             }
         }

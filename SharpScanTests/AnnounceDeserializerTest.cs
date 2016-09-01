@@ -43,195 +43,195 @@ namespace Hbm.Devices.Scan
         private AnnounceDeserializer parser;
 
         [SetUp]
-        public void setup()
+        public void Setup()
         {
-            announce = null;
-            fmr = new FakeMessageReceiver();
+            this.announce = null;
+            this.fmr = new FakeMessageReceiver();
             this.parser = new AnnounceDeserializer();
-            fmr.HandleMessage += parser.HandleEvent;
-            parser.HandleMessage += this.HandleEvent;
+            this.fmr.HandleMessage += this.parser.HandleEvent;
+            this.parser.HandleMessage += this.HandleEvent;
         }
 
         [Test]
         public void ParseCorrectMessage()
         {
-            fmr.EmitSingleCorrectMessage();
-            Assert.NotNull(announce, "No Announce object after correct message");
+            this.fmr.EmitSingleCorrectMessage();
+            Assert.NotNull(this.announce, "No Announce object after correct message");
         }
 
         [Test]
         public void ParseInvalidJsonMessage()
         {
-            fmr.EmitInvalidJsonMessage();
-            Assert.Null(announce, "Got Announce object after invalid message");
+            this.fmr.EmitInvalidJsonMessage();
+            Assert.Null(this.announce, "Got Announce object after invalid message");
         }
 
         [Test]
         public void ParseNotAnnounceMessage()
         {
-            fmr.EmitNotAnnounceMessage();
-            Assert.Null(announce, "Got Announce object from message with method that's not an announce");
+            this.fmr.EmitNotAnnounceMessage();
+            Assert.Null(this.announce, "Got Announce object from message with method that's not an announce");
         }
 
         [Test]
         public void ParseNoJsonRpcMessage()
         {
-            fmr.EmitNoJsonRpcMessage();
-            Assert.Null(announce, "Got Announce object from message with method that's not JsonRpc");
+            this.fmr.EmitNoJsonRpcMessage();
+            Assert.Null(this.announce, "Got Announce object from message with method that's not JsonRpc");
         }
 
         [Test]
         public void ParseEmptyMessage()
         {
-            fmr.EmitEmptyString();
-            Assert.Null(announce, "Got Announce object after empty message");
+            this.fmr.EmitEmptyString();
+            Assert.Null(this.announce, "Got Announce object after empty message");
         }
 
         [Test]
         public void ParseNullMessage()
         {
-            fmr.EmitNullMessage();
-            Assert.Null(announce, "Got Announce object after null");
+            this.fmr.EmitNullMessage();
+            Assert.Null(this.announce, "Got Announce object after null");
         }
 
         [Test]
         public void ParseMissingDeviceMessage()
         {
-            fmr.EmitMissingDeviceMessage();
-            Assert.Null(announce, "Got Announce from message without device");
+            this.fmr.EmitMissingDeviceMessage();
+            Assert.Null(this.announce, "Got Announce from message without device");
         }
 
         [Test]
         public void ParseEmptyDeviceUuidMessage()
         {
-            fmr.EmitEmptyDeviceUuidMessage();
-            Assert.Null(announce, "Got Announce from message with empty UUID");
+            this.fmr.EmitEmptyDeviceUuidMessage();
+            Assert.Null(this.announce, "Got Announce from message with empty UUID");
         }
 
         [Test]
         public void ParseMissingParamsMessage()
         {
-            fmr.EmitMissingParamsMessage();
-            Assert.Null(announce, "Got Announce from message without params");
+            this.fmr.EmitMissingParamsMessage();
+            Assert.Null(this.announce, "Got Announce from message without params");
         }
 
         [Test]
         public void ParseNoInterfaceNameMessage()
         {
-            fmr.EmitNoInterfaceNameMessage();
-            Assert.Null(announce, "Got Announce from message without interface name");
+            this.fmr.EmitNoInterfaceNameMessage();
+            Assert.Null(this.announce, "Got Announce from message without interface name");
         }
 
         [Test]
         public void ParseEmptyInterfaceNameMessage()
         {
-            fmr.EmitEmptyInterfaceNameMessage();
-            Assert.Null(announce, "Got Announce from message with empty interface name");
+            this.fmr.EmitEmptyInterfaceNameMessage();
+            Assert.Null(this.announce, "Got Announce from message with empty interface name");
         }
 
         [Test]
         public void ParseNoInterfaceMessage()
         {
-            fmr.EmitNoInterfaceMessage();
-            Assert.Null(announce, "Got Announce from message without interface");
+            this.fmr.EmitNoInterfaceMessage();
+            Assert.Null(this.announce, "Got Announce from message without interface");
         }
 
         [Test]
         public void ParseNoNetSettingsMessage()
         {
-            fmr.EmitNoNetSettingsMessage();
-            Assert.Null(announce, "Got Announce from message without network settings");
+            this.fmr.EmitNoNetSettingsMessage();
+            Assert.Null(this.announce, "Got Announce from message without network settings");
         }
 
         [Test]
         public void ParseMissingRouterUuidMessage()
         {
-            fmr.EmitMissingRouterUuidMessage();
-            Assert.Null(announce, "Got Announce from message without router UUID");
+            this.fmr.EmitMissingRouterUuidMessage();
+            Assert.Null(this.announce, "Got Announce from message without router UUID");
         }
 
         [Test]
         public void ParseEmtpyRouterUuidMessage()
         {
-            fmr.EmitEmptyRouterUuidMessage();
-            Assert.Null(announce, "Got Announce from message with empty router UUID");
+            this.fmr.EmitEmptyRouterUuidMessage();
+            Assert.Null(this.announce, "Got Announce from message with empty router UUID");
         }
 
         [Test]
         public void ParseMissingTypeMessage()
         {
-            fmr.EmitMissingMethodMessage();
-            Assert.Null(announce, "Got Announce message from JSON with no method");
+            this.fmr.EmitMissingMethodMessage();
+            Assert.Null(this.announce, "Got Announce message from JSON with no method");
         }
 
         [Test]
         public void ParseMissingVersionMessage()
         {
-            fmr.EmitNoVersionMessage();
-            Assert.Null(announce, "Got announce from message with no version");
+            this.fmr.EmitNoVersionMessage();
+            Assert.Null(this.announce, "Got announce from message with no version");
         }
 
         [Test]
         public void ParseWrongVersionMessage()
         {
-            fmr.EmitWrongVersionMessage();
-            Assert.Null(announce, "Got announce from message with wrong version");
+            this.fmr.EmitWrongVersionMessage();
+            Assert.Null(this.announce, "Got announce from message with wrong version");
         }
 
         [Test]
         public void ParseMissingExpireMessage()
         {
-            fmr.EmitMessageNoExpire();
-            Assert.AreEqual(int.Parse(ScanConstants.defaultExpirationInSeconds, CultureInfo.InvariantCulture), announce.Parameters.Expiration, "expiration not set to a meaningful value");
+            this.fmr.EmitMessageNoExpire();
+            Assert.AreEqual(int.Parse(ScanConstants.defaultExpirationInSeconds, CultureInfo.InvariantCulture), this.announce.Parameters.Expiration, "expiration not set to a meaningful value");
         }
 
         [Test]
         public void ParseNegativeExpireMessage()
         {
-            fmr.EmitMessageNegativeExpire();
-            Assert.Null(announce, "Got announce form message with negative expiration");
+            this.fmr.EmitMessageNegativeExpire();
+            Assert.Null(this.announce, "Got announce form message with negative expiration");
         }
 
         [Test]
         public void ParseMissingSevicesMessage()
         {
-            fmr.EmitMessageNoServices();
-            Assert.NotNull(announce.Parameters.Services, "Service list must not be null");
-            Assert.AreEqual(0, announce.Parameters.Services.Count, "Service list not empty");
+            this.fmr.EmitMessageNoServices();
+            Assert.NotNull(this.announce.Parameters.Services, "Service list must not be null");
+            Assert.AreEqual(0, this.announce.Parameters.Services.Count, "Service list not empty");
         }
 
         [Test]
         public void ParseNoIPv4Addreses()
         {
-            fmr.EmitNoIPv4Message();
-            Assert.NotNull(announce.Parameters.NetSettings.Interface.InternetProtocolV4, "IPv4 list must not be null");
-            Assert.AreEqual(0, announce.Parameters.NetSettings.Interface.InternetProtocolV4.Count, "IPv4 list not empty");
+            this.fmr.EmitNoIPv4Message();
+            Assert.NotNull(this.announce.Parameters.NetSettings.Interface.InternetProtocolV4, "IPv4 list must not be null");
+            Assert.AreEqual(0, this.announce.Parameters.NetSettings.Interface.InternetProtocolV4.Count, "IPv4 list not empty");
         }
 
         [Test]
         public void ParseNoIPv6Addreses()
         {
-            fmr.EmitNoIPv6Message();
-            Assert.NotNull(announce.Parameters.NetSettings.Interface.InternetProtocolV6, "IPv6 list must not be null");
-            Assert.AreEqual(0, announce.Parameters.NetSettings.Interface.InternetProtocolV6.Count, "IPv6 list not empty");
+            this.fmr.EmitNoIPv6Message();
+            Assert.NotNull(this.announce.Parameters.NetSettings.Interface.InternetProtocolV6, "IPv6 list must not be null");
+            Assert.AreEqual(0, this.announce.Parameters.NetSettings.Interface.InternetProtocolV6.Count, "IPv6 list not empty");
         }
 
         [Test]
         public void AnnounceEqualsTest()
         {
-            fmr.EmitSingleCorrectMessage();
-            Announce a = announce;
-            announce = null;
-            fmr.EmitSingleCorrectMessage();
-            Assert.NotNull(announce, "No Announce object after correct message");
-            Assert.True(a.Equals(announce), "Same announces are not equal");
+            this.fmr.EmitSingleCorrectMessage();
+            Announce a = this.announce;
+            this.announce = null;
+            this.fmr.EmitSingleCorrectMessage();
+            Assert.NotNull(this.announce, "No Announce object after correct message");
+            Assert.True(a.Equals(this.announce), "Same announces are not equal");
             Assert.False(a.Equals(null), "announce equals null");
         }
 
         [Test]
         public void HandleEventParameterChecking()
         {
-            Assert.DoesNotThrow(delegate { parser.HandleEvent(null, null); }, "HandleEvent doesn't handle errors correctly", "null");
+            Assert.DoesNotThrow(delegate { this.parser.HandleEvent(null, null); }, "HandleEvent doesn't handle errors correctly", "null");
         }
 
         [Test]
@@ -278,32 +278,32 @@ namespace Hbm.Devices.Scan
                 "\"name\":\"" + networkName + "\",\"type\":\"" + networkType + "\"}},\"router\":{\"uuid\":\"" + routerUuid + "\"}," +
                 "\"services\":[{\"port\":" + serviceDaqPort + ",\"type\":\"" + serviceDaqType + "\"}," +
                 "{\"port\":" + serviceSshPort + ",\"type\":\"" + serviceSshType + "\"}]}}";
-            fmr.SendMessage(json);
-            Assert.NotNull(announce, "Did not got an announce!");
-            Assert.AreEqual(announce.Version, jsonRpcVersion, "JsonRpc version not correct");
-            Assert.AreEqual(announce.Method, method, "Method not correct");
-            Assert.AreEqual(announce.Parameters.ApiVersion, apiVersion, "API version notn correct");
-            Assert.AreEqual(announce.Parameters.Device.Label, label, "Device label not correct");
-            Assert.AreEqual(announce.Parameters.Device.FamilyType, family, "Device Family not correct");
-            Assert.AreEqual(announce.Parameters.Device.FirmwareVersion, firmwareVersion, "Device firmware version not correct");
-            Assert.AreEqual(announce.Parameters.Device.HardwareId, hardwareId, "Device hardware ID not correct");
-            Assert.AreEqual(announce.Parameters.Device.Name, name, "Device name not correct");
-            Assert.AreEqual(announce.Parameters.Device.DeviceType, type, "Device type not correct");
-            Assert.AreEqual(announce.Parameters.Device.Uuid, uuid, "Device uuid not correct");
-            Assert.AreEqual(announce.Parameters.Device.IsRouter, isRouter, "Device isRouter not correct");
-            Assert.AreEqual(expiration, announce.Parameters.Expiration, "Expiration not correct");
-            Assert.AreEqual(announce.Parameters.NetSettings.DefaultGateway.InternetProtocolV4Address, defaultGwIPv4, "Default gateway IPv4 address not correct");
-            Assert.AreEqual(announce.Parameters.NetSettings.DefaultGateway.InternetProtocolV6Address, defaultGwIPv6, "Default gateway IPv6 address not correct");
-            Assert.AreEqual(announce.Parameters.NetSettings.Interface.ConfigurationMethod, configurationMethod, "Configuration method not correct");
-            Assert.AreEqual(announce.Parameters.NetSettings.Interface.InternetProtocolV4[0].Address, ipv4Address, "IPv4 address not correct");
-            Assert.AreEqual(announce.Parameters.NetSettings.Interface.InternetProtocolV4[0].NetMask, ipv4Netmask, "IPv4 netmask not correct");
-            Assert.AreEqual(announce.Parameters.NetSettings.Interface.InternetProtocolV6[0].Address, ipv6Address, "IPv6 address not correct");
-            Assert.AreEqual(announce.Parameters.NetSettings.Interface.InternetProtocolV6[0].Prefix, ipv6Prefix, "IPv6 prefix not correct");
-            Assert.AreEqual(announce.Parameters.NetSettings.Interface.Name, networkName, "Interface name not correct");
-            Assert.AreEqual(announce.Parameters.NetSettings.Interface.Description, description, "Description not correct");
-            Assert.AreEqual(announce.Parameters.NetSettings.Interface.InterfaceType, networkType, "Interface type not correct");
-            Assert.AreEqual(announce.Parameters.Router.Uuid, routerUuid, "Router uuid not correct");
-            IList<ServiceEntry> entries = announce.Parameters.Services;
+            this.fmr.SendMessage(json);
+            Assert.NotNull(this.announce, "Did not got an announce!");
+            Assert.AreEqual(jsonRpcVersion, this.announce.Version, "JsonRpc version not correct");
+            Assert.AreEqual(method, this.announce.Method, "Method not correct");
+            Assert.AreEqual(apiVersion, this.announce.Parameters.ApiVersion, "API version notn correct");
+            Assert.AreEqual(label, this.announce.Parameters.Device.Label, "Device label not correct");
+            Assert.AreEqual(family, this.announce.Parameters.Device.FamilyType, "Device Family not correct");
+            Assert.AreEqual(firmwareVersion, this.announce.Parameters.Device.FirmwareVersion, "Device firmware version not correct");
+            Assert.AreEqual(hardwareId, this.announce.Parameters.Device.HardwareId, "Device hardware ID not correct");
+            Assert.AreEqual(name, this.announce.Parameters.Device.Name, "Device name not correct");
+            Assert.AreEqual(type, this.announce.Parameters.Device.DeviceType, "Device type not correct");
+            Assert.AreEqual(uuid, this.announce.Parameters.Device.Uuid, "Device uuid not correct");
+            Assert.AreEqual(isRouter, this.announce.Parameters.Device.IsRouter, "Device isRouter not correct");
+            Assert.AreEqual(expiration, this.announce.Parameters.Expiration, "Expiration not correct");
+            Assert.AreEqual(defaultGwIPv4, this.announce.Parameters.NetSettings.DefaultGateway.InternetProtocolV4Address, "Default gateway IPv4 address not correct");
+            Assert.AreEqual(defaultGwIPv6, this.announce.Parameters.NetSettings.DefaultGateway.InternetProtocolV6Address, "Default gateway IPv6 address not correct");
+            Assert.AreEqual(configurationMethod, this.announce.Parameters.NetSettings.Interface.ConfigurationMethod, "Configuration method not correct");
+            Assert.AreEqual(ipv4Address, this.announce.Parameters.NetSettings.Interface.InternetProtocolV4[0].Address, "IPv4 address not correct");
+            Assert.AreEqual(ipv4Netmask, this.announce.Parameters.NetSettings.Interface.InternetProtocolV4[0].NetMask, "IPv4 netmask not correct");
+            Assert.AreEqual(ipv6Address, this.announce.Parameters.NetSettings.Interface.InternetProtocolV6[0].Address, "IPv6 address not correct");
+            Assert.AreEqual(ipv6Prefix, this.announce.Parameters.NetSettings.Interface.InternetProtocolV6[0].Prefix, "IPv6 prefix not correct");
+            Assert.AreEqual(networkName, this.announce.Parameters.NetSettings.Interface.Name, "Interface name not correct");
+            Assert.AreEqual(description, this.announce.Parameters.NetSettings.Interface.Description, "Description not correct");
+            Assert.AreEqual(networkType, this.announce.Parameters.NetSettings.Interface.InterfaceType, "Interface type not correct");
+            Assert.AreEqual(routerUuid, this.announce.Parameters.Router.Uuid, "Router uuid not correct");
+            IList<ServiceEntry> entries = this.announce.Parameters.Services;
             foreach (ServiceEntry entry in entries)
             {
                 string serviceType = entry.ServiceType;
@@ -321,7 +321,7 @@ namespace Hbm.Devices.Scan
 
         private void HandleEvent(object sender, AnnounceEventArgs args)
         {
-            announce = args.Announce;
+            this.announce = args.Announce;
         }
     }
 }

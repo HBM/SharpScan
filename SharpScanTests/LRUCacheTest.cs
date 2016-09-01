@@ -36,46 +36,46 @@ namespace Hbm.Devices.Scan.Announcing
     [TestFixture]
     internal class LRUCacheTest
     {
-        LruCache<string, string> cache;
+        private LruCache<string, string> cache;
 
         [SetUp]
-        public void setup()
+        public void Setup()
         {
-            cache = new LruCache<string, string>(3);
+            this.cache = new LruCache<string, string>(3);
         }
 
         [Test]
         public void DropTest()
         {
-            cache.Add("key1", "val1");
-            cache.Add("key2", "val2");
-            cache.Add("key3", "val3");
-            cache.Add("key4", "val4");
+            this.cache.Add("key1", "val1");
+            this.cache.Add("key2", "val2");
+            this.cache.Add("key3", "val3");
+            this.cache.Add("key4", "val4");
 
             string value;
-            Assert.False(cache.TryGetValue("key1", out value), "Eldest element still in cache");
-            Assert.True(cache.TryGetValue("key2", out value), "New element not in cache");
-            Assert.True(cache.TryGetValue("key3", out value), "New element not in cache");
-            Assert.True(cache.TryGetValue("key4", out value), "New element not in cache");
+            Assert.False(this.cache.TryGetValue("key1", out value), "Eldest element still in cache");
+            Assert.True(this.cache.TryGetValue("key2", out value), "New element not in cache");
+            Assert.True(this.cache.TryGetValue("key3", out value), "New element not in cache");
+            Assert.True(this.cache.TryGetValue("key4", out value), "New element not in cache");
         }
 
         [Test]
         public void CountTest()
         {
-            Int32 capacity = 10;
-            cache = new LruCache<string, string>(capacity);
-            Assert.AreEqual(cache.Capacity, capacity);
+            int capacity = 10;
+            this.cache = new LruCache<string, string>(capacity);
+            Assert.AreEqual(this.cache.Capacity, capacity);
         }
 
         [Test]
         public void RemoveNonexistentKey()
         {
-            cache.Add("key1", "val1");
-            cache.Add("key2", "val2");
-            Assert.AreEqual(2, cache.Count);
+            this.cache.Add("key1", "val1");
+            this.cache.Add("key2", "val2");
+            Assert.AreEqual(2, this.cache.Count);
 
-            cache.Remove("key5");
-            Assert.AreEqual(2, cache.Count);
+            this.cache.Remove("key5");
+            Assert.AreEqual(2, this.cache.Count);
         }
     }
 }

@@ -36,34 +36,34 @@ namespace Hbm.Devices.Scan
     using NUnit.Framework;
 
     [TestFixture]
-    class UuidMatcherTest
+    internal class UuidMatcherTest
     {
         private Announce filteredAnnounce;
         private Announce announce;
         private FakeMessageReceiver fmr;
         private string[] uuids = { "fred", "0009E500123A", "blah" };
         private UuidMatcher matcher;
-        AnnounceFilter filter;
+        private AnnounceFilter filter;
 
         [SetUp]
-        public void setup()
+        public void Setup()
         {
-            matcher = new UuidMatcher(uuids);
-            filteredAnnounce = null;
-            fmr = new FakeMessageReceiver();
+            this.matcher = new UuidMatcher(this.uuids);
+            this.filteredAnnounce = null;
+            this.fmr = new FakeMessageReceiver();
             AnnounceDeserializer parser = new AnnounceDeserializer();
-            fmr.HandleMessage += parser.HandleEvent;
-            filter = new AnnounceFilter(matcher);
-            parser.HandleMessage += filter.HandleEvent;
+            this.fmr.HandleMessage += parser.HandleEvent;
+            this.filter = new AnnounceFilter(this.matcher);
+            parser.HandleMessage += this.filter.HandleEvent;
             parser.HandleMessage += this.HandleAnnounceEvent;
-            filter.HandleMessage += this.HandleFilteredEvent;
+            this.filter.HandleMessage += this.HandleFilteredEvent;
         }
 
         [Test]
         public void CheckUuidsTest()
         {
-            Assert.AreEqual(uuids, matcher.GetFilterStrings());
-            Assert.AreEqual(matcher, filter.Matcher);
+            Assert.AreEqual(this.uuids, this.matcher.GetFilterStrings());
+            Assert.AreEqual(this.matcher, this.filter.Matcher);
         }
 
         [Test]
@@ -75,23 +75,23 @@ namespace Hbm.Devices.Scan
         [Test]
         public void FilterCorrectMessageTest()
         {
-            fmr.EmitSingleCorrectMessage();
-            Assert.NotNull(filteredAnnounce, "Didn't got an Announce object");
+            this.fmr.EmitSingleCorrectMessage();
+            Assert.NotNull(this.filteredAnnounce, "Didn't got an Announce object");
         }
 
         [Test]
         public void FilterCorrectMessageNoMatchTest()
         {
-            fmr.EmitCorrectMessageUuid123b();
-            Assert.NotNull(announce, "No announce parsed");
-            Assert.Null(filteredAnnounce, "Got an Announce object despite non-matching UUID");
+            this.fmr.EmitCorrectMessageUuid123b();
+            Assert.NotNull(this.announce, "No announce parsed");
+            Assert.Null(this.filteredAnnounce, "Got an Announce object despite non-matching UUID");
         }
 
         [Test]
         public void FilterMissingUuidTest()
         {
-            fmr.EmitMissingDeviceUuidMessage();
-            Assert.Null(filteredAnnounce, "Got an Announce object despite existant UUID");
+            this.fmr.EmitMissingDeviceUuidMessage();
+            Assert.Null(this.filteredAnnounce, "Got an Announce object despite existant UUID");
         }
 
         [Test]
@@ -99,18 +99,18 @@ namespace Hbm.Devices.Scan
         {
             AnnounceEventArgs args = new AnnounceEventArgs();
             args.Announce = null;
-            filter.HandleEvent(null, args);
-            Assert.Null(filteredAnnounce, "got an Announce object");
+            this.filter.HandleEvent(null, args);
+            Assert.Null(this.filteredAnnounce, "got an Announce object");
         }
 
         private void HandleFilteredEvent(object sender, AnnounceEventArgs args)
         {
-            filteredAnnounce = args.Announce;
+            this.filteredAnnounce = args.Announce;
         }
 
         private void HandleAnnounceEvent(object sender, AnnounceEventArgs args)
         {
-            announce = args.Announce;
+            this.announce = args.Announce;
         }
     }
 }

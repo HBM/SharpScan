@@ -28,13 +28,12 @@
 //
 // </copyright>
 
-using Hbm.Devices.Scan.Announcing;
-
 namespace Hbm.Devices.Scan
 {
+    using Hbm.Devices.Scan.Announcing;
     using NUnit.Framework;
 
-    class AnnounceCacheTest
+    internal class AnnounceCacheTest
     {
         private FakeMessageReceiver fmr;
         private AnnounceDeserializer parser;
@@ -42,52 +41,52 @@ namespace Hbm.Devices.Scan
         [SetUp]
         public void Setup()
         {
-            fmr = new FakeMessageReceiver();
-            parser = new AnnounceDeserializer();
-            fmr.HandleMessage += parser.HandleEvent;
-            parser.HandleMessage += this.HandleEvent;
+            this.fmr = new FakeMessageReceiver();
+            this.parser = new AnnounceDeserializer();
+            this.fmr.HandleMessage += this.parser.HandleEvent;
+            this.parser.HandleMessage += this.HandleEvent;
         }
 
         [Test]
         public void AddDeviceToCacheTest()
         {
-            fmr.EmitSingleCorrectMessage();
-            Assert.AreEqual(parser.GetCache().Size(), 1, "Entries in cache != 1");
-            Assert.AreEqual(parser.GetCache().LastAnnounceSize(), 1, "Paths in cache != 1");
-            Assert.NotNull(parser.GetCache().Get(SharpScanTests.FakeMessages.CorrectMessage), "JSON message not in cache");
+            this.fmr.EmitSingleCorrectMessage();
+            Assert.AreEqual(this.parser.GetCache().Size(), 1, "Entries in cache != 1");
+            Assert.AreEqual(this.parser.GetCache().LastAnnounceSize(), 1, "Paths in cache != 1");
+            Assert.NotNull(this.parser.GetCache().Get(SharpScanTests.FakeMessages.CorrectMessage), "JSON message not in cache");
 
-            fmr.EmitSingleCorrectMessageDifferentDevice();
-            Assert.AreEqual(parser.GetCache().Size(), 2, "Entries in cache != 2");
-            Assert.AreEqual(parser.GetCache().LastAnnounceSize(), 2, "Paths in cache != 2");
-            Assert.NotNull(parser.GetCache().Get(SharpScanTests.FakeMessages.CorrectMessage), "JSON message not in cache");
-            Assert.NotNull(parser.GetCache().Get(SharpScanTests.FakeMessages.CorrectMessageDifferentDevice), "JSON message not in cache");
+            this.fmr.EmitSingleCorrectMessageDifferentDevice();
+            Assert.AreEqual(this.parser.GetCache().Size(), 2, "Entries in cache != 2");
+            Assert.AreEqual(this.parser.GetCache().LastAnnounceSize(), 2, "Paths in cache != 2");
+            Assert.NotNull(this.parser.GetCache().Get(SharpScanTests.FakeMessages.CorrectMessage), "JSON message not in cache");
+            Assert.NotNull(this.parser.GetCache().Get(SharpScanTests.FakeMessages.CorrectMessageDifferentDevice), "JSON message not in cache");
         }
 
         [Test]
         public void GetFromCacheTest()
         {
-            fmr.EmitSingleCorrectMessage();
-            Assert.NotNull(parser.GetCache().Get(SharpScanTests.FakeMessages.CorrectMessage), "Correct message not in cache");
+            this.fmr.EmitSingleCorrectMessage();
+            Assert.NotNull(this.parser.GetCache().Get(SharpScanTests.FakeMessages.CorrectMessage), "Correct message not in cache");
         }
 
         [Test]
         public void DontAddTwiceTest()
         {
-            fmr.EmitSingleCorrectMessage();
-            fmr.EmitSingleCorrectMessage();
-            Assert.AreEqual(parser.GetCache().Size(), 1, "Entries in cache != 1");
-            Assert.AreEqual(parser.GetCache().LastAnnounceSize(), 1, "Paths in cache != 1");
+            this.fmr.EmitSingleCorrectMessage();
+            this.fmr.EmitSingleCorrectMessage();
+            Assert.AreEqual(this.parser.GetCache().Size(), 1, "Entries in cache != 1");
+            Assert.AreEqual(this.parser.GetCache().LastAnnounceSize(), 1, "Paths in cache != 1");
         }
 
         [Test]
         public void UpdateDeviceEntry()
         {
-            fmr.EmitSingleCorrectMessage();
-            fmr.EmitSingleCorrectMessageDifferentServices();
-            Assert.AreEqual(parser.GetCache().Size(), 1, "Entries in cache != 1");
-            Assert.AreEqual(parser.GetCache().LastAnnounceSize(), 1, "Paths in cache != 1");
-            Assert.Null(parser.GetCache().Get(SharpScanTests.FakeMessages.CorrectMessage), "Original message still in cache");
-            Assert.NotNull(parser.GetCache().Get(SharpScanTests.FakeMessages.CorretMessageDifferentServices), "New message not in cache");
+            this.fmr.EmitSingleCorrectMessage();
+            this.fmr.EmitSingleCorrectMessageDifferentServices();
+            Assert.AreEqual(this.parser.GetCache().Size(), 1, "Entries in cache != 1");
+            Assert.AreEqual(this.parser.GetCache().LastAnnounceSize(), 1, "Paths in cache != 1");
+            Assert.Null(this.parser.GetCache().Get(SharpScanTests.FakeMessages.CorrectMessage), "Original message still in cache");
+            Assert.NotNull(this.parser.GetCache().Get(SharpScanTests.FakeMessages.CorretMessageDifferentServices), "New message not in cache");
         }
 
         [Test]

@@ -97,8 +97,8 @@ namespace Hbm.Devices.Scan
         {
             AnnounceEventArgs args = new AnnounceEventArgs();
             args.Announce = null;
-            filter.HandleEvent(null, args);
-            Assert.Null(filteredAnnounce, "got an Announce object");
+            this.filter.HandleEvent(null, args);
+            Assert.Null(this.filteredAnnounce, "got an Announce object");
         }
 
         private void HandleFilteredEvent(object sender, AnnounceEventArgs args)
