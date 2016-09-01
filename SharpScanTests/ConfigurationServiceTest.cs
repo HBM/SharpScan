@@ -31,13 +31,13 @@
 namespace Hbm.Devices.Scan.Configure
 {
     using System;
-    using System.Runtime.Serialization.Json;
-    using NUnit.Framework;
     using System.IO;
+    using System.Runtime.Serialization.Json;
     using System.Text;
-    using System.Runtime.Serialization;
-    using Announcing;
     using System.Threading;
+
+    using Announcing;
+    using NUnit.Framework;
 
     [TestFixture]
     internal class ConfigurationServiceTest : IMulticastSender, IConfigurationCallback
