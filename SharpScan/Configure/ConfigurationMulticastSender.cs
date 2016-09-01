@@ -51,7 +51,7 @@ namespace Hbm.Devices.Scan.Configure
         {
             if (interfaces == null)
             {
-                throw new ArgumentException("no collection of Interfaces given");
+                throw new ArgumentNullException("no collection of Interfaces given");
             }
 
             this.socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
@@ -117,7 +117,16 @@ namespace Hbm.Devices.Scan.Configure
 
                 this.socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastInterface, (int)IPAddress.HostToNetworkOrder(p.Index));
                 this.socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastLoopback, 0);
-                byte[] buffer = Encoding.UTF8.GetBytes(message);
+
+                byte[] buffer;
+                if (string.IsNullOrEmpty(message))
+                {
+                    buffer = new byte[0];
+                }
+                else
+                {
+                    buffer = Encoding.UTF8.GetBytes(message);
+                }
                 this.socket.Send(buffer, buffer.Length, SocketFlags.None);
             }
         }
