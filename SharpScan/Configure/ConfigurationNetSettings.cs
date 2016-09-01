@@ -39,24 +39,37 @@ namespace Hbm.Devices.Scan.Configure
     {
         public ConfigurationNetSettings(ConfigurationInterface configurationInterface) : this(configurationInterface, null)
         {
+            if (configurationInterface == null)
+            {
+                throw new ArgumentNullException("configurationInterface");
+            }
         }
 
         public ConfigurationNetSettings(DefaultGateway gateway) : this(null, gateway)
         {
+            if (gateway == null)
+            {
+                throw new ArgumentNullException("gateway");
+            }
         }
 
         public ConfigurationNetSettings(ConfigurationInterface configurationInterface, DefaultGateway gateway)
         {
-            if ((configurationInterface == null) && (gateway == null))
+            if (configurationInterface == null) 
             {
-                throw new ArgumentNullException("you must set either the configuration interface or the default gateway");
+                throw new ArgumentNullException("configurationInterface");
+            }
+
+            if (gateway == null)
+            {
+                throw new ArgumentNullException("gateway");
             }
 
             if (gateway != null)
             {
                 if (string.IsNullOrEmpty(gateway.InternetProtocolV4Address) && string.IsNullOrEmpty(gateway.InternetProtocolV6Address))
                 {
-                    throw new ArgumentException("Neither IPv4 nor IPv6 address set in default gateway");
+                    throw new ArgumentException("gateway");
                 }
             }
 

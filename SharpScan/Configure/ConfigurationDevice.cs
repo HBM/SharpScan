@@ -43,7 +43,7 @@ namespace Hbm.Devices.Scan.Configure
         {
             if ((uuid == null) || (uuid.Length == 0))
             {
-                throw new ArgumentException("emtpy or zero-length uuid string");
+                throw new ArgumentException("uuid");
             }
 
             this.uuid = uuid;

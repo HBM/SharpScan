@@ -50,7 +50,7 @@ namespace Hbm.Devices.Scan.Configure
         {
             if (mode != Method.Dhcp)
             {
-                throw new ArgumentException("configure \"manual\" without ip and netmask is not allowed");
+                throw new ArgumentException("mode");
             }
 
             this.ConfigurationMethod = mode;
@@ -60,7 +60,7 @@ namespace Hbm.Devices.Scan.Configure
         {
             if (string.IsNullOrEmpty(iface))
             {
-                throw new ArgumentException("interface name must not null or empty");
+                throw new ArgumentException("iface");
             }
 
             this.Name = iface;
@@ -107,7 +107,7 @@ namespace Hbm.Devices.Scan.Configure
                 }
                 else
                 {
-                    throw new ArgumentException("no valid configuration method given");
+                    throw new ArgumentException("ConfigurationMethodString");
                 }
             }
         }

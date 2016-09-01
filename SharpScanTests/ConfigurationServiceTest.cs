@@ -154,7 +154,7 @@ namespace Hbm.Devices.Scan.Configure
         {
             ConfigurationService service = new ConfigurationService(this.parser, this);
 
-            Assert.Throws<ArgumentException>(
+            Assert.Throws<ArgumentNullException>(
                 delegate
                 {
                     service.SendConfiguration(null, "bla", this, 1000);
@@ -171,7 +171,7 @@ namespace Hbm.Devices.Scan.Configure
                 },
                 "no exception thrown if no query ID given");
 
-            Assert.Throws<ArgumentException>(
+            Assert.Throws<ArgumentNullException>(
                 delegate
                 {
                     service.SendConfiguration(parameters, "foo", null, 1000);

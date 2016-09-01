@@ -43,12 +43,12 @@ namespace Hbm.Devices.Scan.Configure
         {
             if (parameters == null)
             {
-                throw new ArgumentException("no configuration parameters given");
+                throw new ArgumentNullException("parameters");
             }
 
             if (string.IsNullOrEmpty(queryId))
             {
-                throw new ArgumentException("no query id given");
+                throw new ArgumentException("queryId");
             }
 
             this.QueryId = queryId;

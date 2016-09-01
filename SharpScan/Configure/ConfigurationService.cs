@@ -60,22 +60,22 @@ namespace Hbm.Devices.Scan.Configure
         {
             if (parameters == null)
             {
-                throw new ArgumentException("no parameters given");
+                throw new ArgumentNullException("parameters");
             }
 
             if (callbacks == null)
             {
-                throw new ArgumentException("no callbacks given");
+                throw new ArgumentNullException("callbacks");
             }
 
             if (timeoutMs <= 0)
             {
-                throw new ArgumentException("timeout must be greater the 0");
+                throw new ArgumentException("timeout");
             }
 
             if (string.IsNullOrEmpty(queryId))
             {
-                throw new ArgumentException("no query id given");
+                throw new ArgumentException("queryId");
             }
 
             ConfigurationRequest request = new ConfigurationRequest(parameters, queryId);

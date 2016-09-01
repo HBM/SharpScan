@@ -98,7 +98,7 @@ namespace Hbm.Devices.Scan.Configure
         [Test]
         public void ConfigurationRequestIllegalParameters()
         {
-            Assert.Throws<ArgumentException>(
+            Assert.Throws<ArgumentNullException>(
                 delegate
                 {
                     ConfigurationRequest request = new ConfigurationRequest(null, "bla");
