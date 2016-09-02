@@ -32,6 +32,7 @@ namespace Hbm.Devices.Scan.Configure
 {
     using System;
     using NUnit.Framework;
+    using Announcing;
 
     [TestFixture]
     internal class ConfigurationObjectsTests
@@ -85,7 +86,7 @@ namespace Hbm.Devices.Scan.Configure
         }
 
         [Test]
-        public void ConfigurationNetSettings()
+        public void ConfigurationNetSettingsInstantiation()
         {
             Assert.Throws<ArgumentNullException>(
                 delegate
@@ -93,6 +94,44 @@ namespace Hbm.Devices.Scan.Configure
                     ConfigurationNetSettings settings = new ConfigurationNetSettings(null, null);
                 },
                 "no exception if both gateway and configuration interface are null");
+
+            Assert.Throws<ArgumentNullException>(
+                delegate
+                {
+                    ConfigurationNetSettings settings = new ConfigurationNetSettings(new ConfigurationInterface("eth0", ConfigurationInterface.Method.Dhcp), null);
+                },
+                "no exception if gateway is null");
+
+            Assert.Throws<ArgumentNullException>(
+                delegate
+                {
+                    ConfigurationNetSettings settings = new ConfigurationNetSettings((ConfigurationInterface)null);
+                },
+                "no exception if configuration interface is null");
+
+            Assert.Throws<ArgumentNullException>(
+                delegate
+                {
+                    ConfigurationNetSettings settings = new ConfigurationNetSettings((DefaultGateway)null);
+                },
+                "no exception if gateway is null");
+
+            Assert.DoesNotThrow(
+                delegate
+                {
+                    DefaultGateway gateway = new DefaultGateway();
+                    gateway.InternetProtocolV4Address = "172.19.1.1";
+                    ConfigurationNetSettings settings = new ConfigurationNetSettings(new ConfigurationInterface("eth0", ConfigurationInterface.Method.Dhcp), gateway);
+                },
+                "exception thrown for correct instantiation");
+
+            Assert.Throws<ArgumentException>(
+                delegate
+                {
+                    DefaultGateway gateway = new DefaultGateway();
+                    ConfigurationNetSettings settings = new ConfigurationNetSettings(new ConfigurationInterface("eth0", ConfigurationInterface.Method.Dhcp), gateway);
+                },
+                "no exception if gateway IP is null or empty ");
         }
 
         [Test]
