@@ -74,12 +74,9 @@ namespace Hbm.Devices.Scan.Configure
                 throw new ArgumentNullException("gateway");
             }
 
-            if (gateway != null)
+            if (string.IsNullOrEmpty(gateway.InternetProtocolV4Address) && string.IsNullOrEmpty(gateway.InternetProtocolV6Address))
             {
-                if (string.IsNullOrEmpty(gateway.InternetProtocolV4Address) && string.IsNullOrEmpty(gateway.InternetProtocolV6Address))
-                {
-                    throw new ArgumentException("gateway");
-                }
+                throw new ArgumentException("gateway");
             }
 
             this.ConfigurationInterface = configurationInterface;
