@@ -2,7 +2,9 @@ param(
 	[string]$git = "git",
 	[string]$solutiondir = "solutiondir",
 	[string]$assembly_info_template = "assembly_info_template",
-	[string]$assembly_info = "assembly_info"
+	[string]$assembly_info = "assembly_info",
+	[string]$name = "name",
+	[string]$guid = "guid"
 )
 
 [System.Environment]::CurrentDirectory = $solutiondir
@@ -31,5 +33,7 @@ if ($is_tag) {
 		$template_content = $template_content -replace "%dirty%", ""
 	}
 }
+$template_content = $template_content -replace "%name%", $name
+$template_content = $template_content -replace "%guid%", $guid
 
 $template_content | Out-File $assembly_info

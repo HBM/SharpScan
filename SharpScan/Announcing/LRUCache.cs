@@ -32,17 +32,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("ScanTests, PublicKey=" +
-    "00240000048000009400000006020000" +
-    "00240000525341310004000001000100" +
-    "3d1f0c942caa540613d5e9c7230a1ef8" +
-    "ab05266aea901184bb3bc0812b70659f" +
-    "7bf79a0bbd2cfae380b8ad3b4321d73b" +
-    "2a8b99c7842ab078791d484037e6a025" +
-    "9a4d4dac9bc81b1731eb9238969b65db" +
-    "8ece659acff236c691e1e02e797ce8c1" +
-    "ecbb6bfa3664f01360b41138cb2f1c1f" +
-    "5b7a0f4778b883a29cde5cd6131c3be6")]
+[assembly: InternalsVisibleTo("SharpScanTests")]
 
 namespace Hbm.Devices.Scan.Announcing
 {

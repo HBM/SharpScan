@@ -13,6 +13,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Receiver", "Examples\Receiv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sender", "Examples\Sender\Sender.csproj", "{3A7ADA67-CBDD-423C-A4B2-F86CFC4C4EE2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7B6160FF-EDA6-4E83-B6F3-213BB5C875CA}"
+	ProjectSection(SolutionItems) = preProject
+		AssemblyInfo.template = AssemblyInfo.template
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
